@@ -6,6 +6,8 @@ import java.util.Map;
 
 /**
  * 代理工厂类
+ * <p>
+ * 使用了简单工厂区包装代理类
  *
  * @param <T>
  */

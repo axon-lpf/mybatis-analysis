@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * 隐射器代理类
+ * 其主要作用，可以在代理类中去不断扩展自己的内容
  */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
