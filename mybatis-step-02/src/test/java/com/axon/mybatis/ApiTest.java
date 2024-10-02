@@ -1,11 +1,10 @@
-package com.axon.mybaits;
+package com.axon.mybatis;
 
 import com.alibaba.fastjson.JSON;
-import com.axon.mybaits.dao.IUserDao;
-import com.axon.mybaits.enties.UserDO;
+import com.axon.mybaits.MapperProxyFactory;
+import com.axon.mybatis.dao.IUserDao;
 import org.junit.Test;
 
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,8 +20,8 @@ public class ApiTest {
         MapperProxyFactory<IUserDao> factory = new MapperProxyFactory<>(IUserDao.class);
         Map<String, String> sqlSession = new HashMap<>();
 
-        sqlSession.put("com.axon.mybaits.dao.IUserDao.queryUserName", "模拟执行xml中的sql语句queryUserName");
-        sqlSession.put("com.axon.mybaits.dao.IUserDao.queryUserInfoById", "模拟执行xml中的sql语句queryUserInfoById");
+        sqlSession.put("com.axon.mybatis.dao.IUserDao.queryUserName", "模拟执行xml中的sql语句queryUserName");
+        sqlSession.put("com.axon.mybatis.dao.IUserDao.queryUserInfoById", "模拟执行xml中的sql语句queryUserInfoById");
 
         IUserDao iUserDao = factory.newTnstance(sqlSession);
 

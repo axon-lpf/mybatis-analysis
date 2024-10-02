@@ -1,4 +1,5 @@
-package com.axon.mybaits.enties;
+package com.axon.mybatis.enties;
+
 
 
 /**

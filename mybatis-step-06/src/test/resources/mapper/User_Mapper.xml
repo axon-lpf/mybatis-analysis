@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axon.mybatis.dao.IUserDao">
+
+    <select id="queryUserInfoById" parameterType="java.lang.Long" resultType="com.axon.mybatis.enties.UserDO">
+    /*这里是个坑，需要转换， 不转化无法隐射成java中的long 类型，或者在javad代码中进行验证转换*/
+        SELECT CAST(id AS SIGNED) AS id, name
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryUserList" parameterType="com.axon.mybatis.enties.UserDO"
+            resultType="com.axon.mybatis.enties.UserDO">
+        SELECT id, name
+        FROM user
+        where userId = #{userId}
+    </select>
+
+</mapper>

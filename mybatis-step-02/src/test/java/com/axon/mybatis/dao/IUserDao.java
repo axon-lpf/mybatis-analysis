@@ -1,6 +1,6 @@
-package com.axon.mybaits.dao;
+package com.axon.mybatis.dao;
 
-import com.axon.mybaits.enties.UserDO;
+import com.axon.mybatis.enties.UserDO;
 
 import java.util.List;
 
