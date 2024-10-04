@@ -1,6 +1,7 @@
 package com.axon.mybatis.executor.statement;
 
 import com.axon.mybatis.executor.Executor;
+import com.axon.mybatis.executor.parameter.ParameterHandler;
 import com.axon.mybatis.executor.resultset.ResultSetHandler;
 import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.MappedStatement;
@@ -23,7 +24,15 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
     protected final Object parameterObject;
 
+    /**
+     *  结果处理器
+     */
     protected final ResultSetHandler resultSetHandler;
+
+    /**
+     *  参数处理器
+     */
+    protected final ParameterHandler parameterHandler;
 
     protected BoundSql boundSql;
 
@@ -33,6 +42,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
         this.mappedStatement = mappedStatement;
         this.parameterObject = parameterObject;
         this.boundSql = boundSql;
+        this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
         this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, boundSql);
     }
 

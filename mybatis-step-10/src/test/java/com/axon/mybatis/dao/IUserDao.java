@@ -13,7 +13,13 @@ public interface IUserDao {
      * @param id
      * @return
      */
-    UserDO queryUserInfoById(Integer id);
+    UserDO queryUserInfoById(Long id);
+
+
+    /**
+     * 多个参数获取
+     */
+    UserDO queryUserInfo(UserDO user);
 
     /**
      * 查询用户列表信息
@@ -23,8 +29,5 @@ public interface IUserDao {
      */
     List<UserDO> queryUserList(UserDO user);
 
-    /**
-     *  关闭连接
-     */
-    void  close();
+
 }

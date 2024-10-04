@@ -9,6 +9,12 @@
         WHERE id = #{id}
     </select>
 
+
+    <select id="queryUserInfo" parameterType="com.axon.mybatis.enties.UserDO" resultType="com.axon.mybatis.enties.UserDO">
+        SELECT CAST(id AS SIGNED) AS id, name FROM user
+        where id = #{id}  and  name=#{name}
+    </select>
+
     <select id="queryUserList" parameterType="com.axon.mybatis.enties.UserDO"
             resultType="com.axon.mybatis.enties.UserDO">
         SELECT id, name

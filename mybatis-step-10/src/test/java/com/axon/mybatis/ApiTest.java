@@ -35,9 +35,13 @@ public class ApiTest {
             SqlSession sqlSession = sqlSessionFactory.openSession();
             //获取代理对象
             IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
-            UserDO userDO = userDao.queryUserInfoById(1);
-            logger.info("测试结果：{}",JSON.toJSONString(userDO));
+            UserDO userDO = userDao.queryUserInfoById(1L);
+            logger.info("测试结果：{}", JSON.toJSONString(userDO));
+            UserDO queryUser = new UserDO();
+            queryUser.setId(1L);
+            queryUser.setName("啊稀薄");
+             userDO = userDao.queryUserInfo(queryUser);
+            logger.info("测试结果：{}", JSON.toJSONString(userDO));
 
         } catch (Exception e) {
             e.printStackTrace();

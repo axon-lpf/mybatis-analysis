@@ -2,21 +2,33 @@ package com.axon.mybatis.mapping;
 
 import com.axon.mybatis.session.Configuration;
 import com.axon.mybatis.type.JdbcType;
+import com.axon.mybatis.type.TypeHandler;
+import com.axon.mybatis.type.TypeHandlerRegistry;
 
 
 /**
- *  参数映射处理
+ * 参数映射处理
  */
 public class ParameterMapping {
 
     private Configuration configuration;
 
-    // property
+    /**
+     * 属性值
+     */
     private String property;
-    // javaType = int
+
+    /**
+     * 对应的java类型
+     */
     private Class<?> javaType = Object.class;
-    // jdbcType=NUMERIC
+    /**
+     * 对应的jdbc的类型
+     */
     private JdbcType jdbcType;
+
+
+    private TypeHandler<?> typeHandler;
 
     private ParameterMapping() {
     }
@@ -42,6 +54,13 @@ public class ParameterMapping {
         }
 
         public ParameterMapping build() {
+            if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
+                Configuration configuration = parameterMapping.configuration;
+                TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+                // 根据不同的类型，获取对应的typeHandler
+                parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+            }
+
             return parameterMapping;
         }
     }
@@ -60,5 +79,10 @@ public class ParameterMapping {
 
     public JdbcType getJdbcType() {
         return jdbcType;
+    }
+
+
+    public TypeHandler<?> getTypeHandler() {
+        return typeHandler;
     }
 }

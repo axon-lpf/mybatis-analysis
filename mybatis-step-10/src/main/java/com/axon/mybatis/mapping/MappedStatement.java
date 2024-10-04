@@ -1,5 +1,6 @@
 package com.axon.mybatis.mapping;
 
+import com.axon.mybatis.scripting.LanguageDriver;
 import com.axon.mybatis.session.Configuration;
 
 public class MappedStatement {
@@ -16,6 +17,8 @@ public class MappedStatement {
 
     Class<?> resultType;
 
+    private LanguageDriver lang;
+
     /**
      * 建造之模式
      */
@@ -29,6 +32,8 @@ public class MappedStatement {
             mappedStatement.sqlCommandType = sqlCommandType;
             mappedStatement.sqlSource = sqlSource;
             mappedStatement.resultType = resultType;
+            mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
+
         }
 
         public MappedStatement build() {
@@ -88,6 +93,11 @@ public class MappedStatement {
 
     public Class<?> getResultType() {
         return resultType;
+    }
+
+
+    public LanguageDriver getLang() {
+        return lang;
     }
 
 }

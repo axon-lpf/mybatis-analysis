@@ -2,6 +2,7 @@ package com.axon.mybatis.builder;
 
 import com.axon.mybatis.session.Configuration;
 import com.axon.mybatis.type.TypeAliasRegistry;
+import com.axon.mybatis.type.TypeHandlerRegistry;
 
 
 /**
@@ -13,10 +14,12 @@ public abstract class BaseBuilder {
 
     protected final TypeAliasRegistry typeAliasRegistry;
 
+    protected final TypeHandlerRegistry typeHandlerRegistry;
 
     public BaseBuilder(Configuration configuration) {
         this.configuration = configuration;
         this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
+        this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
     }
 
     public Configuration getConfiguration() {

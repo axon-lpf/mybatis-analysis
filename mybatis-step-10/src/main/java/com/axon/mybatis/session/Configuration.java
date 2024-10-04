@@ -6,6 +6,7 @@ import com.axon.mybatis.datasource.pooled.PooledDataSourceFactory;
 import com.axon.mybatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.axon.mybatis.executor.Executor;
 import com.axon.mybatis.executor.SimpleExecutor;
+import com.axon.mybatis.executor.parameter.ParameterHandler;
 import com.axon.mybatis.executor.resultset.DefaultResultSetHandler;
 import com.axon.mybatis.executor.resultset.ResultSetHandler;
 import com.axon.mybatis.executor.statement.PreparedStatementHandler;
@@ -18,11 +19,14 @@ import com.axon.mybatis.reflection.factory.DefaultObjectFactory;
 import com.axon.mybatis.reflection.factory.ObjectFactory;
 import com.axon.mybatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import com.axon.mybatis.reflection.wrapper.ObjectWrapperFactory;
+import com.axon.mybatis.scripting.LanguageDriver;
 import com.axon.mybatis.scripting.LanguageDriverRegistry;
 import com.axon.mybatis.scripting.xmltags.XMLLanguageDriver;
 import com.axon.mybatis.transaction.Transaction;
 import com.axon.mybatis.transaction.jdbc.JdbcTransactionFactory;
 import com.axon.mybatis.type.TypeAliasRegistry;
+import com.axon.mybatis.type.TypeHandler;
+import com.axon.mybatis.type.TypeHandlerRegistry;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,23 +62,6 @@ public class Configuration {
 
     protected String databaseId;
 
-    /**
-     * 初始化时，将对应的数据源工厂的映射放到缓存中去
-     */
-    public Configuration() {
-        typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
-        typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
-        typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
-        typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
-
-        languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
-
-    }
-
-
-    public TypeAliasRegistry getTypeAliasRegistry() {
-        return typeAliasRegistry;
-    }
 
     /**
      * 类型别名注册机
@@ -95,6 +82,31 @@ public class Configuration {
      * xml解析注册机
      */
     protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+
+
+    /**
+     * 类型处理器注册机
+     */
+    protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+
+
+    /**
+     * 初始化时，将对应的数据源工厂的映射放到缓存中去
+     */
+    public Configuration() {
+        typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+        typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
+        typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
+        typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
+
+        languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
+
+    }
+
+
+    public TypeAliasRegistry getTypeAliasRegistry() {
+        return typeAliasRegistry;
+    }
 
 
     /**
@@ -165,6 +177,22 @@ public class Configuration {
         return new DefaultResultSetHandler(executor, mappedStatement, boundSql);
     }
 
+
+    /**
+     * 参数处理器
+     *
+     * @param mappedStatement
+     * @param parameterObject
+     * @param boundSql
+     * @return
+     */
+    public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+        // 创建参数处理器
+        ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
+        // 插件的一些参数，也是在这里处理，暂时不添加这部分内容 interceptorChain.pluginAll(parameterHandler);
+        return parameterHandler;
+    }
+
     /**
      * 生产执行器
      */
@@ -197,5 +225,25 @@ public class Configuration {
     public MetaObject newMetaObject(Object object) {
         return MetaObject.forObject(object, objectFactory, objectWrapperFactory);
     }
+
+    /**
+     * 获取类型注册机
+     *
+     * @return
+     */
+    public TypeHandlerRegistry getTypeHandlerRegistry() {
+        return typeHandlerRegistry;
+    }
+
+
+    /**
+     * 获取对应的脚本语言驱动
+     *
+     * @return
+     */
+    public LanguageDriver getDefaultScriptingLanguageInstance() {
+        return languageRegistry.getDefaultDriver();
+    }
+
 
 }
