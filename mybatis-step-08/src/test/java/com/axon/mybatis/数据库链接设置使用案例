@@ -1,0 +1,38 @@
+
+datasource:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  hikari:
+    connection-test-query: SELECT 1
+    maximum-pool-size: 25
+    minimum-idle: 5
+
+具体参数解释：
+	1.	driver-class-name: com.mysql.cj.jdbc.Driver
+	•	指定了数据库驱动的类名。在这里，com.mysql.cj.jdbc.Driver 是 MySQL JDBC 驱动的类名，用来与 MySQL 数据库进行交互。cj 是指 MySQL Connector/J，这是 MySQL 的官方 JDBC 驱动程序。
+	2.	hikari:
+	•	这个部分定义了使用的 HikariCP 连接池的相关配置。
+子配置项：
+	•	connection-test-query: SELECT 1
+	•	这是一个简单的 SQL 查询，用于测试数据库连接的有效性。HikariCP 会在检查连接是否可用时执行这个查询，以确保连接是活跃的。
+	•	在这里，SELECT 1 是一个非常轻量级的查询，通常被用作连接测试查询，因为它几乎不占用数据库资源。
+	•	maximum-pool-size: 25
+	•	定义了连接池的最大连接数，也就是同时可以存在的最大数据库连接数。
+	•	这里设置为 25，意味着连接池中最多可以有 25 个活跃的数据库连接。
+	•	如果超过 25 个线程同时请求数据库连接，则后续的请求会进入等待队列，直到有空闲连接释放出来。
+	•	minimum-idle: 5
+	•	定义了连接池中保持的最小空闲连接数。
+	•	这里设置为 5，意味着即使没有任何数据库请求，连接池也会保留至少 5 个空闲连接，以便快速响应新的数据库请求。
+	•	当活跃连接数较少时，连接池会保证空闲连接数量不低于 5。
+
+HikariCP 连接池介绍：
+
+HikariCP 是一个高效的 JDBC 连接池，其优势在于轻量、高性能、低延迟。相比于其他连接池（如 C3P0 或 DBCP），HikariCP 通常能提供更快的响应速度和更少的资源消耗。
+
+	•	优势：
+	•	高并发性能：HikariCP 在高并发情况下表现出色，能够有效处理大量数据库请求。
+	•	低资源消耗：它对内存和 CPU 的占用较低，尤其是在大量空闲连接的管理上更为高效。
+	•	快速响应：通过智能的连接池管理机制，可以更快速地提供数据库连接。
+
+总结：
+
+这段配置使用了 HikariCP 连接池来管理 MySQL 数据库连接，并设置了连接池的最大连接数（25）、最小空闲连接数（5）以及连接有效性测试查询（SELECT 1）。这种配置非常适合应用程序中高并发的数据库操作场景，能够保持较好的性能和稳定性。
