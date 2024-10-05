@@ -3,8 +3,10 @@ package com.axon.mybatis.mapping;
 import com.axon.mybatis.scripting.LanguageDriver;
 import com.axon.mybatis.session.Configuration;
 
-public class MappedStatement {
+import java.util.List;
 
+
+public class MappedStatement {
 
     /**
      * 禁止使用构造器
@@ -13,11 +15,19 @@ public class MappedStatement {
 
     }
 
+    /**
+     * 配置新消息
+     */
+    private Configuration configuration;
+    /**
+     * id
+     */
+    private String id;
+    private SqlCommandType sqlCommandType;
     private SqlSource sqlSource;
-
     Class<?> resultType;
-
     private LanguageDriver lang;
+    private List<ResultMap> resultMaps;
 
     /**
      * 建造之模式
@@ -40,6 +50,15 @@ public class MappedStatement {
             assert mappedStatement.configuration != null;
             assert mappedStatement.id != null;
             return mappedStatement;
+        }
+
+        public String id() {
+            return mappedStatement.id;
+        }
+
+        public Builder resultMaps(List<ResultMap> resultMaps) {
+            mappedStatement.resultMaps = resultMaps;
+            return this;
         }
 
 
@@ -71,10 +90,6 @@ public class MappedStatement {
     }
 
 
-    private Configuration configuration;
-    private String id;
-    private SqlCommandType sqlCommandType;
-
     public BoundSql getBoundSql() {
         return boundSql;
     }
@@ -98,6 +113,11 @@ public class MappedStatement {
 
     public LanguageDriver getLang() {
         return lang;
+    }
+
+
+    public List<ResultMap> getResultMaps() {
+        return resultMaps;
     }
 
 }

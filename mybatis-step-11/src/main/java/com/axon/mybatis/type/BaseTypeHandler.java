@@ -3,6 +3,7 @@ package com.axon.mybatis.type;
 import com.axon.mybatis.session.Configuration;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -24,8 +25,16 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
         setNonNullParameter(ps, i, parameter, jdbcType);
     }
 
+
+    @Override
+    public T getResult(ResultSet rs, String columnName) throws SQLException {
+        return getNullableResult(rs, columnName);
+
+    }
+
     /**
      * 由具体的子类进行实现
+     *
      * @param ps
      * @param i
      * @param parameter
@@ -33,5 +42,15 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
      * @throws SQLException
      */
     protected abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
+
+
+    /**
+     * 结果集的处理
+     * @param rs
+     * @param columnName
+     * @return
+     * @throws SQLException
+     */
+    protected abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
 }

@@ -7,6 +7,7 @@ import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.session.Configuration;
 import com.axon.mybatis.session.ResultHandler;
+import com.axon.mybatis.session.RowBounds;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -36,14 +37,15 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
     protected BoundSql boundSql;
 
-    public BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, ResultHandler resultHandler, BoundSql boundSql) {
+    public BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
         this.configuration = mappedStatement.getConfiguration();
         this.executor = executor;
         this.mappedStatement = mappedStatement;
         this.parameterObject = parameterObject;
         this.boundSql = boundSql;
         this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
-        this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, boundSql);
+        this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, resultHandler, boundSql);
+
     }
 
 

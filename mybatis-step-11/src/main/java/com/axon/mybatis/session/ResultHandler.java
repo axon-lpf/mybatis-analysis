@@ -5,6 +5,6 @@ package com.axon.mybatis.session;
  */
 public interface ResultHandler {
 
-    void handleResult();
+    void handleResult(ResultContext resultContext);
 
 }

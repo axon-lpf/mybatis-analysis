@@ -3,6 +3,7 @@ package com.axon.mybatis.session.defaults;
 import com.axon.mybatis.executor.Executor;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.session.Configuration;
+import com.axon.mybatis.session.RowBounds;
 import com.axon.mybatis.session.SqlSession;
 
 import java.lang.reflect.Method;
@@ -38,7 +39,7 @@ public class DefaultSqlSession implements SqlSession {
     public <T> T selectOne(String statement, Object parameter) {
         try {
             MappedStatement mappedStatement = configuration.getMappedStatement(statement);
-            List<T> objects = executor.query(mappedStatement, parameter, Executor.NO_RESULT_HANDLER, mappedStatement.getSqlSource().getBoundSql(parameter));
+            List<T> objects = executor.query(mappedStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, mappedStatement.getSqlSource().getBoundSql(parameter));
             return objects.get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);

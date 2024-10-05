@@ -4,6 +4,7 @@ import com.axon.mybatis.executor.Executor;
 import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.session.ResultHandler;
+import com.axon.mybatis.session.RowBounds;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +14,8 @@ import java.util.List;
 
 public class PreparedStatementHandler extends BaseStatementHandler {
 
-    public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, ResultHandler resultHandler, BoundSql boundSql) {
-        super(executor, mappedStatement, parameterObject, resultHandler, boundSql);
+    public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+        super(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     }
 
     @Override

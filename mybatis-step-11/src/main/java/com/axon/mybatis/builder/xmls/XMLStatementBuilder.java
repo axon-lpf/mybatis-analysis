@@ -1,6 +1,7 @@
 package com.axon.mybatis.builder.xmls;
 
 import com.axon.mybatis.builder.BaseBuilder;
+import com.axon.mybatis.builder.MapperBuilderAssistant;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.mapping.SqlCommandType;
 import com.axon.mybatis.mapping.SqlSource;
@@ -15,10 +16,13 @@ public class XMLStatementBuilder extends BaseBuilder {
     private String currentNamespace;
     private Element element;
 
-    public XMLStatementBuilder(Configuration configuration, Element element, String currentNamespace) {
+    private MapperBuilderAssistant builderAssistant;
+
+
+    public XMLStatementBuilder(Configuration configuration,MapperBuilderAssistant builderAssistant,  Element element) {
         super(configuration);
         this.element = element;
-        this.currentNamespace = currentNamespace;
+        this.builderAssistant=builderAssistant;
     }
 
 
@@ -32,6 +36,10 @@ public class XMLStatementBuilder extends BaseBuilder {
         Class<?> parameterTypeClass = resolveAlias(parameterType);
         // 结果类型
         String resultType = element.attributeValue("resultType");
+
+        // 外部应用 resultMap
+        String resultMap = element.attributeValue("resultMap");
+
         Class<?> resultTypeClass = resolveAlias(resultType);
         // 获取命令类型(select|insert|update|delete)
         String nodeName = element.getName();
@@ -43,12 +51,17 @@ public class XMLStatementBuilder extends BaseBuilder {
 
         SqlSource sqlSource = langDriver.createSqlSource(configuration, element, parameterTypeClass);
 
-
-        MappedStatement mappedStatement = new MappedStatement.Builder(configuration, currentNamespace + "." + id, sqlCommandType, sqlSource, resultTypeClass).build();
-
+        // 调用助手类【本节新添加，便于统一处理参数的包装】
+        builderAssistant.addMappedStatement(id,
+                sqlSource,
+                sqlCommandType,
+                parameterTypeClass,
+                resultMap,
+                resultTypeClass,
+                langDriver);
 
         // 添加解析 SQL
-        configuration.addMappedStatement(mappedStatement);
+       // configuration.addMappedStatement(mappedStatement);
     }
 
 }

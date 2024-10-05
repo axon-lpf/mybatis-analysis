@@ -4,6 +4,7 @@ import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.session.Configuration;
 import com.axon.mybatis.session.ResultHandler;
+import com.axon.mybatis.session.RowBounds;
 import com.axon.mybatis.transaction.Transaction;
 import org.slf4j.LoggerFactory;
 
@@ -30,14 +31,14 @@ public abstract class BaseExecutor implements Executor {
 
 
     @Override
-    public <E> List<E> query(MappedStatement ms, Object parameter, ResultHandler resultHandler, BoundSql boundSql) {
+    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
         if (closed) {
             throw new RuntimeException("closed");
         }
-        return doQuery(ms, parameter, resultHandler, boundSql);
+        return doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     }
 
-    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, ResultHandler resultHandler, BoundSql boundSql);
+    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql);
 
     @Override
     public Transaction getTransaction() {
@@ -55,7 +56,7 @@ public abstract class BaseExecutor implements Executor {
     }
 
     @Override
-    public void rollback(boolean required)  {
+    public void rollback(boolean required) {
         if (!closed) {
             if (required) {
                 try {
