@@ -16,6 +16,9 @@ import java.util.List;
 public class SimpleExecutor extends BaseExecutor {
 
 
+
+
+
     public SimpleExecutor(Configuration configuration, Transaction transaction) {
         super(configuration, transaction);
     }
@@ -35,7 +38,7 @@ public class SimpleExecutor extends BaseExecutor {
     protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
         Statement stmt = null;
         Configuration configuration = ms.getConfiguration();
-        StatementHandler statementHandler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
+        StatementHandler statementHandler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
         try {
             // 准备语句
             stmt = prepareStatement(statementHandler);

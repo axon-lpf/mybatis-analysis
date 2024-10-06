@@ -1,6 +1,7 @@
 package com.axon.mybatis.executor.statement;
 
 import com.axon.mybatis.executor.Executor;
+import com.axon.mybatis.executor.keygen.KeyGenerator;
 import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.session.ResultHandler;
@@ -43,6 +44,10 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     public int update(Statement statement) throws SQLException {
         PreparedStatement ps = (PreparedStatement) statement;
         ps.execute();
+
+        Object parameterObject = boundSql.getParameterObject();
+        KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
+        keyGenerator.processAfter(executor, mappedStatement, ps, parameterObject);
         return ps.getUpdateCount();
     }
 }

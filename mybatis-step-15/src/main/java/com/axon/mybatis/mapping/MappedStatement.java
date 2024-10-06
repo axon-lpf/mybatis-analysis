@@ -1,5 +1,8 @@
 package com.axon.mybatis.mapping;
 
+import com.axon.mybatis.executor.keygen.Jdbc3KeyGenerator;
+import com.axon.mybatis.executor.keygen.KeyGenerator;
+import com.axon.mybatis.executor.keygen.NoKeyGenerator;
 import com.axon.mybatis.scripting.LanguageDriver;
 import com.axon.mybatis.session.Configuration;
 
@@ -29,6 +32,16 @@ public class MappedStatement {
     private LanguageDriver lang;
     private List<ResultMap> resultMaps;
 
+    //主键生成接口
+    private KeyGenerator keyGenerator;
+    // 主键生成配置
+    private String[] keyProperties;
+
+    private String[] keyColumns;
+
+    private String resource;
+
+
     /**
      * 建造之模式
      */
@@ -42,6 +55,7 @@ public class MappedStatement {
             mappedStatement.sqlCommandType = sqlCommandType;
             mappedStatement.sqlSource = sqlSource;
             mappedStatement.resultType = resultType;
+            mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
             mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
 
         }
@@ -61,6 +75,21 @@ public class MappedStatement {
             return this;
         }
 
+
+        public Builder resource(String resource) {
+            mappedStatement.resource = resource;
+            return this;
+        }
+
+        public Builder keyGenerator(KeyGenerator keyGenerator) {
+            mappedStatement.keyGenerator = keyGenerator;
+            return this;
+        }
+
+        public Builder keyProperty(String keyProperty) {
+            mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
+            return this;
+        }
 
     }
 
@@ -118,6 +147,26 @@ public class MappedStatement {
 
     public List<ResultMap> getResultMaps() {
         return resultMaps;
+    }
+
+    public String[] getKeyProperties() {
+        return keyProperties;
+    }
+
+    public String[] getKeyColumns() {
+        return keyColumns;
+    }
+
+    public KeyGenerator getKeyGenerator() {
+        return keyGenerator;
+    }
+
+    private static String[] delimitedStringToArray(String in) {
+        if (in == null || in.trim().length() == 0) {
+            return null;
+        } else {
+            return in.split(",");
+        }
     }
 
 }

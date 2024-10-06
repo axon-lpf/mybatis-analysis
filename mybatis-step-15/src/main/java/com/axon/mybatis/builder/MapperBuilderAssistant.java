@@ -1,5 +1,6 @@
 package com.axon.mybatis.builder;
 
+import com.axon.mybatis.executor.keygen.KeyGenerator;
 import com.axon.mybatis.mapping.*;
 import com.axon.mybatis.reflection.MetaClass;
 import com.axon.mybatis.scripting.LanguageDriver;
@@ -49,11 +50,16 @@ public class MapperBuilderAssistant extends BaseBuilder {
             Class<?> parameterType,
             String resultMap,
             Class<?> resultType,
+            KeyGenerator keyGenerator,
+            String keyProperty,
             LanguageDriver lang
     ) {
         // 给id加上namespace前缀：com.axon..mybatis.dao.IUserDao.queryUserInfoById
         id = applyCurrentNamespace(id, false);
         MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlCommandType, sqlSource, resultType);
+        statementBuilder.resource(resource);
+        statementBuilder.keyGenerator(keyGenerator);
+        statementBuilder.keyProperty(keyProperty);
 
         // 结果映射，给 MappedStatement#resultMaps
         setStatementResultMap(resultMap, resultType, statementBuilder);

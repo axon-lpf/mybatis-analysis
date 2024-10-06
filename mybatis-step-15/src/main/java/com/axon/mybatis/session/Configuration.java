@@ -6,6 +6,7 @@ import com.axon.mybatis.datasource.pooled.PooledDataSourceFactory;
 import com.axon.mybatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.axon.mybatis.executor.Executor;
 import com.axon.mybatis.executor.SimpleExecutor;
+import com.axon.mybatis.executor.keygen.KeyGenerator;
 import com.axon.mybatis.executor.parameter.ParameterHandler;
 import com.axon.mybatis.executor.resultset.DefaultResultSetHandler;
 import com.axon.mybatis.executor.resultset.ResultSetHandler;
@@ -44,6 +45,11 @@ public class Configuration {
     }
 
     protected Environment environment;
+
+    /**
+     * 主键生成的配置
+     */
+    private Boolean useGeneratedKeys = false;
 
 
     // 对象工厂和对象包装器工厂
@@ -91,10 +97,15 @@ public class Configuration {
 
 
     /**
-     *  这里映射结果，存在map中
+     * 这里映射结果，存在map中
      */
     protected final Map<String, ResultMap> resultMaps = new HashMap<>();
 
+
+    /**
+     * 主键生成策略
+     */
+    protected final Map<String, KeyGenerator> keyGenerators = new HashMap<>();
 
 
     /**
@@ -258,7 +269,8 @@ public class Configuration {
 
 
     /**
-     *  获取隐射结果
+     * 获取隐射结果
+     *
      * @param id
      * @return
      */
@@ -268,12 +280,39 @@ public class Configuration {
 
 
     /**
-     *  添加隐射结果
+     * 添加隐射结果
+     *
      * @param resultMap
      */
     public void addResultMap(ResultMap resultMap) {
         resultMaps.put(resultMap.getId(), resultMap);
     }
 
+
+    /**
+     * 主键生成配置
+     *
+     * @return
+     */
+    public boolean isUseGeneratedKeys() {
+        return useGeneratedKeys;
+    }
+
+
+    public void setUseGeneratedKeys(boolean useGeneratedKeys) {
+        this.useGeneratedKeys = useGeneratedKeys;
+    }
+
+    public boolean hasKeyGenerator(String id) {
+        return keyGenerators.containsKey(id);
+    }
+
+    public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
+        keyGenerators.put(id, keyGenerator);
+    }
+
+    public KeyGenerator getKeyGenerator(String id) {
+        return keyGenerators.get(id);
+    }
 
 }

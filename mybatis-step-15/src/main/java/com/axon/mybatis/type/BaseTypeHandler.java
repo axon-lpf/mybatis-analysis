@@ -32,6 +32,11 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
 
     }
 
+    @Override
+    public T getResult(ResultSet rs, int columnIndex) throws SQLException {
+        return getNullableResult(rs, columnIndex);
+    }
+
     /**
      * 由具体的子类进行实现
      *
@@ -52,5 +57,9 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
      * @throws SQLException
      */
     protected abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
+
+
+
+    protected abstract T getNullableResult(ResultSet rs, int columnIndex) throws SQLException;
 
 }

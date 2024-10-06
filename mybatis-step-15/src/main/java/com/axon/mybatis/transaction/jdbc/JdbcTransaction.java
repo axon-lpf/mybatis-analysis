@@ -30,8 +30,13 @@ public class JdbcTransaction implements Transaction {
     public JdbcTransaction(Connection connection) {
         this.connection = connection;
     }
+
     @Override
     public Connection getConnection() throws SQLException {
+        // 如果是多条sql，只能在同一链接下完成事物的特性。
+        if (connection != null) {
+            return connection;
+        }
         connection = dataSource.getConnection();
         connection.setTransactionIsolation(transactionLevel.getLevel());
         connection.setAutoCommit(autoCommit);

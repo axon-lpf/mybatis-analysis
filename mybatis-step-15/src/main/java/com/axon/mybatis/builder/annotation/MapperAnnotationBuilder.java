@@ -6,6 +6,9 @@ import com.axon.mybatis.anntations.Select;
 import com.axon.mybatis.anntations.Update;
 import com.axon.mybatis.binding.MapperMethod;
 import com.axon.mybatis.builder.MapperBuilderAssistant;
+import com.axon.mybatis.executor.keygen.Jdbc3KeyGenerator;
+import com.axon.mybatis.executor.keygen.KeyGenerator;
+import com.axon.mybatis.executor.keygen.NoKeyGenerator;
 import com.axon.mybatis.mapping.SqlCommandType;
 import com.axon.mybatis.mapping.SqlSource;
 import com.axon.mybatis.scripting.LanguageDriver;
@@ -64,14 +67,20 @@ public class MapperAnnotationBuilder {
         if (sqlSource != null) {
             final String mappedStatementId = type.getName() + "." + method.getName();
             SqlCommandType sqlCommandType = getSqlCommandType(method);
+
+            KeyGenerator keyGenerator;
+            String keyProperty = "id";
+            if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
+                keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+            } else {
+                keyGenerator = new NoKeyGenerator();
+            }
             boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
             String resultMapId = null;
             if (isSelect) {
                 resultMapId = parseResultMap(method);
             }
-
-            // 调用助手类
             assistant.addMappedStatement(
                     mappedStatementId,
                     sqlSource,
@@ -79,6 +88,8 @@ public class MapperAnnotationBuilder {
                     parameterTypeClass,
                     resultMapId,
                     getReturnType(method),
+                    keyGenerator,
+                    keyProperty,
                     languageDriver
             );
         }

@@ -25,4 +25,13 @@ public class DateTypeHandler extends BaseTypeHandler<Date> {
         return null;
     }
 
+    @Override
+    protected Date getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+        Timestamp sqlTimestamp = rs.getTimestamp(columnIndex);
+        if (sqlTimestamp != null) {
+            return new Date(sqlTimestamp.getTime());
+        }
+        return null;
+    }
+
 }

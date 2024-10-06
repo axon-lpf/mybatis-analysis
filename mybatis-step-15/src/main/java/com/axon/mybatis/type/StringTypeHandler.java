@@ -7,24 +7,27 @@ import java.sql.SQLException;
 /**
  * String 类型的处理器
  */
-public class StringTypeHandler implements TypeHandler<String> {
+public class StringTypeHandler extends BaseTypeHandler<String> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
         ps.setString(i, parameter);
     }
 
-    /**
-     * 针对结果的处理
-     *
-     * @param rs
-     * @param columnName
-     * @return
-     * @throws SQLException
-     */
     @Override
-    public String getResult(ResultSet rs, String columnName) throws SQLException {
-        return rs.getString(columnName);
-
+    protected void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+        ps.setString(i, parameter);
     }
+
+    @Override
+    protected String getNullableResult(ResultSet rs, String columnName) throws SQLException {
+        return rs.getString(columnName);
+    }
+
+    @Override
+    protected String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+        return rs.getString(columnIndex);
+    }
+
+
 }
