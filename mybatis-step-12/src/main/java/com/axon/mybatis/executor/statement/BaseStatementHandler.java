@@ -42,6 +42,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
         this.executor = executor;
         this.mappedStatement = mappedStatement;
         this.parameterObject = parameterObject;
+        if (boundSql == null) {
+            boundSql = mappedStatement.getBoundSql(parameterObject);
+        }
         this.boundSql = boundSql;
         this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
         this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, resultHandler, boundSql);
@@ -72,5 +75,10 @@ public abstract class BaseStatementHandler implements StatementHandler {
     @Override
     public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
         return Collections.emptyList();
+    }
+
+    @Override
+    public int update(Statement statement) throws SQLException {
+        return 0;
     }
 }

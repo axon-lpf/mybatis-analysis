@@ -19,6 +19,16 @@ public interface StatementHandler {
      */
     void parameterize(Statement statement) throws SQLException;
 
+
+    /**
+     * 执行更新操作
+     *
+     * @param statement
+     * @return
+     * @throws SQLException
+     */
+    int update(Statement statement) throws SQLException;
+
     /**
      * 执行查询
      */

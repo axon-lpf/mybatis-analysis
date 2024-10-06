@@ -30,4 +30,13 @@ public interface IUserDao {
     List<UserDO> queryUserList(UserDO user);
 
 
+    List<UserDO> queryUserInfoList();
+
+    int updateUserInfo(UserDO req);
+
+    void insertUserInfo(UserDO req);
+
+    int deleteUserInfoByUserId(String userId);
+
+
 }

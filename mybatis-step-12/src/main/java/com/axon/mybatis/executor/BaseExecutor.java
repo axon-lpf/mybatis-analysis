@@ -9,6 +9,7 @@ import com.axon.mybatis.transaction.Transaction;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public abstract class BaseExecutor implements Executor {
@@ -28,6 +29,22 @@ public abstract class BaseExecutor implements Executor {
         this.transaction = transaction;
         this.wrapper = this;
     }
+
+
+    @Override
+    public int update(MappedStatement ms, Object parameter) throws SQLException {
+        return doUpdate(ms, parameter);
+    }
+
+    /**
+     * 更新操作
+     *
+     * @param ms
+     * @param parameter
+     * @return
+     * @throws SQLException
+     */
+    protected abstract int doUpdate(MappedStatement ms, Object parameter) throws SQLException;
 
 
     @Override
@@ -81,6 +98,19 @@ public abstract class BaseExecutor implements Executor {
         } finally {
             transaction = null;
             closed = true;
+        }
+    }
+
+    /**
+     * 关闭
+     * @param statement
+     */
+    protected void closeStatement(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ignore) {
+            }
         }
     }
 }

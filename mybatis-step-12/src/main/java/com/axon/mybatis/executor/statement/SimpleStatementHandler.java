@@ -13,13 +13,14 @@ import java.util.List;
 
 
 /**
- *  简单实现的
+ * 简单实现的
  */
-public class SimpleStatementHandler   extends BaseStatementHandler {
+public class SimpleStatementHandler extends BaseStatementHandler {
 
     public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
         super(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     }
+
     @Override
     protected Statement instantiateStatement(Connection connection) throws SQLException {
         return connection.createStatement();
@@ -35,5 +36,19 @@ public class SimpleStatementHandler   extends BaseStatementHandler {
         String sql = boundSql.getSql();
         statement.execute(sql);
         return resultSetHandler.handleResultSets(statement);
+    }
+
+    /**
+     * 更新语句操作
+     *
+     * @param statement
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public int update(Statement statement) throws SQLException {
+        String sql = boundSql.getSql();
+        statement.execute(sql);
+        return statement.getUpdateCount();
     }
 }

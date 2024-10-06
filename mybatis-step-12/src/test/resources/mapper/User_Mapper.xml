@@ -19,7 +19,29 @@
             resultType="com.axon.mybatis.enties.UserDO">
         SELECT id, name
         FROM user
-        where userId = #{userId}
     </select>
+
+
+
+    <select id="queryUserInfoList" resultType="com.axon.mybatis.enties.UserDO">
+        SELECT id, name
+        FROM user
+    </select>
+
+    <update id="updateUserInfo" parameterType="com.axon.mybatis.enties.UserDO">
+        UPDATE user
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertUserInfo" parameterType="com.axon.mybatis.enties.UserDO">
+        INSERT INTO user
+            (name)
+        VALUES (#{name})
+    </insert>
+
+    <delete id="deleteUserInfoByUserId" parameterType="java.lang.String">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
 
 </mapper>

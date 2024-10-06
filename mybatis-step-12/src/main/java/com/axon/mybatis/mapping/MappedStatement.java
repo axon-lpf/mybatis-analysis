@@ -90,8 +90,8 @@ public class MappedStatement {
     }
 
 
-    public BoundSql getBoundSql() {
-        return boundSql;
+    public BoundSql getBoundSql(Object parameterObject) {
+        return sqlSource.getBoundSql(parameterObject);
     }
 
 
