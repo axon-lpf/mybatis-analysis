@@ -1,8 +1,10 @@
 package com.axon.mybatis.builder;
 
 import com.axon.mybatis.mapping.*;
+import com.axon.mybatis.reflection.MetaClass;
 import com.axon.mybatis.scripting.LanguageDriver;
 import com.axon.mybatis.session.Configuration;
+import com.axon.mybatis.type.TypeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,6 +137,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
      * @return
      */
     public ResultMap addResultMap(String id, Class<?> type, List<ResultMapping> resultMappings) {
+        // 这里需要补全id 路径
+        id = applyCurrentNamespace(id, false);
         ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
                 configuration,
                 id,
@@ -144,6 +148,39 @@ public class MapperBuilderAssistant extends BaseBuilder {
         ResultMap resultMap = inlineResultMapBuilder.build();
         configuration.addResultMap(resultMap);
         return resultMap;
+    }
+
+
+    public ResultMapping buildResultMapping(
+            Class<?> resultType,
+            String property,
+            String column,
+            List<ResultFlag> flags) {
+
+        Class<?> javaTypeClass = resolveResultJavaType(resultType, property, null);
+        TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, null);
+
+        ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
+        builder.typeHandler(typeHandlerInstance);
+        builder.flags(flags);
+
+        return builder.build();
+
+    }
+
+
+    private Class<?> resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
+        if (javaType == null && property != null) {
+            try {
+                MetaClass metaResultType = MetaClass.forClass(resultType);
+                javaType = metaResultType.getSetterType(property);
+            } catch (Exception ignore) {
+            }
+        }
+        if (javaType == null) {
+            javaType = Object.class;
+        }
+        return javaType;
     }
 
 }

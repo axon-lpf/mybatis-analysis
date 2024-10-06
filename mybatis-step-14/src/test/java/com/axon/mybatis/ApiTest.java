@@ -1,7 +1,9 @@
 package com.axon.mybatis;
 
 import com.alibaba.fastjson.JSON;
+import com.axon.mybatis.dao.IActivityDao;
 import com.axon.mybatis.dao.IUserDao;
+import com.axon.mybatis.enties.ActivityDO;
 import com.axon.mybatis.enties.UserDO;
 import com.axon.mybatis.io.Resources;
 import com.axon.mybatis.session.SqlSession;
@@ -31,91 +33,13 @@ public class ApiTest {
         sqlSession = sqlSessionFactory.openSession();
     }
 
-    /**
-     * 测试添加用户
-     */
     @Test
-    public void test_insertUserInfo() {
+    public void test_queryActivityById() {
         // 1. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
+        IActivityDao dao = sqlSession.getMapper(IActivityDao.class);
         // 2. 测试验证
-        UserDO user = new UserDO();
-        user.setName("周瑜");
-        userDao.insertUserInfo(user);
-        logger.info("测试结果：{}", "Insert OK");
-        // 3. 提交事务
-        sqlSession.commit();
-    }
-
-    /**
-     * 测试删除用户
-     */
-    @Test
-    public void test_deleteUserInfoByUserId() {
-        // 1. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
-        // 2. 测试验证
-        int count = userDao.deleteUserInfoByUserId("2");
-        logger.info("测试结果：{}", count == 1);
-
-        // 3. 提交事务
-        sqlSession.commit();
-    }
-
-    /**
-     * 测试更新用户
-     */
-
-    @Test
-    public void test_updateUserInfo() {
-        // 1. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
-        // 2. 测试验证
-        UserDO userDO = new UserDO();
-        userDO.setId(3L);
-        userDO.setName("风清阳");
-        int count = userDao.updateUserInfo(userDO);
-        logger.info("测试结果：{}", count);
-
-        // 3. 提交事务
-        sqlSession.commit();
-    }
-
-
-    @Test
-    public void test_queryUserInfoById() {
-        // 1. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
-        // 2. 测试验证：基本参数
-        UserDO user = userDao.queryUserInfoById(3L);
-        logger.info("测试结果：{}", JSON.toJSONString(user));
-    }
-
-    @Test
-    public void test_queryUserInfo() {
-        // 1. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
-        UserDO userDO = new UserDO();
-        userDO.setId(3L);
-        userDO.setName("风清阳");
-        userDO = userDao.queryUserInfo(userDO);
-        // 2. 测试验证：对象参数
-        logger.info("测试结果：{}", JSON.toJSONString(userDO));
-    }
-
-    @Test
-    public void test_queryUserInfoList() {
-        // 1. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
-        // 2. 测试验证：对象参数
-        List<UserDO> users = userDao.queryUserInfoList();
-        logger.info("测试结果：{}", JSON.toJSONString(users));
+        ActivityDO res = dao.queryActivityById(100001L);
+        logger.info("测试结果：{}", JSON.toJSONString(res));
     }
 
 
