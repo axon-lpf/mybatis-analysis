@@ -16,6 +16,8 @@ import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.Environment;
 import com.axon.mybatis.mapping.MappedStatement;
 import com.axon.mybatis.mapping.ResultMap;
+import com.axon.mybatis.plugin.Interceptor;
+import com.axon.mybatis.plugin.InterceptorChain;
 import com.axon.mybatis.reflection.MetaObject;
 import com.axon.mybatis.reflection.factory.DefaultObjectFactory;
 import com.axon.mybatis.reflection.factory.ObjectFactory;
@@ -106,6 +108,12 @@ public class Configuration {
      * 主键生成策略
      */
     protected final Map<String, KeyGenerator> keyGenerators = new HashMap<>();
+
+
+    /**
+     * 插件的拦截器链
+     */
+    protected final InterceptorChain interceptorChain = new InterceptorChain();
 
 
     /**
@@ -222,7 +230,12 @@ public class Configuration {
      * 创建语句处理器
      */
     public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-        return new PreparedStatementHandler(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
+        StatementHandler preparedStatementHandler = new PreparedStatementHandler(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
+        // 嵌入插件，代理对象
+        preparedStatementHandler =(StatementHandler) interceptorChain.pluginAll(preparedStatementHandler);
+        // 这里创建出来的是一个代理对象
+        return preparedStatementHandler;
+
     }
 
     public boolean isResourceLoaded(String resource) {
@@ -313,6 +326,11 @@ public class Configuration {
 
     public KeyGenerator getKeyGenerator(String id) {
         return keyGenerators.get(id);
+    }
+
+
+    public void addInterceptor(Interceptor interceptorInstance) {
+        interceptorChain.addInterceptor(interceptorInstance);
     }
 
 }

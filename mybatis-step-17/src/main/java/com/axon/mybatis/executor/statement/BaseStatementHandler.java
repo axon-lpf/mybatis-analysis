@@ -81,4 +81,10 @@ public abstract class BaseStatementHandler implements StatementHandler {
     public int update(Statement statement) throws SQLException {
         return 0;
     }
+
+
+    @Override
+    public BoundSql getBoundSql() {
+        return boundSql;
+    }
 }

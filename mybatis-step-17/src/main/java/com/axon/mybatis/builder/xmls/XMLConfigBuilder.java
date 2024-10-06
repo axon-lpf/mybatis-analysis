@@ -4,6 +4,7 @@ import com.axon.mybatis.builder.BaseBuilder;
 import com.axon.mybatis.datasource.DataSourceFactory;
 import com.axon.mybatis.io.Resources;
 import com.axon.mybatis.mapping.Environment;
+import com.axon.mybatis.plugin.Interceptor;
 import com.axon.mybatis.session.Configuration;
 import com.axon.mybatis.transaction.TransactionFactory;
 import org.dom4j.Document;
@@ -50,6 +51,8 @@ public class XMLConfigBuilder extends BaseBuilder {
     public Configuration parse() {
 
         try {
+            //解析插件的拦截器链
+            pluginElement(root.element("plugins"));
             //设置环境
             environmentsElement(root.element("environments"));
 
@@ -122,6 +125,31 @@ public class XMLConfigBuilder extends BaseBuilder {
                 configuration.addMapper(aClass);
             }
 
+        }
+    }
+
+
+    /**
+     * 解析插件拦截器
+     *
+     * @param parent
+     * @throws Exception
+     */
+    private void pluginElement(Element parent) throws Exception {
+        if (parent == null) return;
+        List<Element> elements = parent.elements();
+        for (Element element : elements) {
+            String interceptor = element.attributeValue("interceptor");
+            // 参数配置
+            Properties properties = new Properties();
+            List<Element> propertyElementList = element.elements("property");
+            for (Element property : propertyElementList) {
+                properties.setProperty(property.attributeValue("name"), property.attributeValue("value"));
+            }
+            // 获取插件实现类并实例化：cn.bugstack.mybatis.test.plugin.TestPlugin
+            Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
+            interceptorInstance.setProperties(properties);
+            configuration.addInterceptor(interceptorInstance);
         }
     }
 }

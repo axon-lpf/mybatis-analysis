@@ -39,7 +39,6 @@ public class PreparedStatementHandler extends BaseStatementHandler {
         return resultSetHandler.<E>handleResultSets(ps);
     }
 
-
     @Override
     public int update(Statement statement) throws SQLException {
         PreparedStatement ps = (PreparedStatement) statement;
