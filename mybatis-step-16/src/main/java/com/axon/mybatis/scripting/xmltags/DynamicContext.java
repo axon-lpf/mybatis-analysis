@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  动态上下文
+ * 动态上下文
  */
 public class DynamicContext {
 
@@ -71,7 +71,9 @@ public class DynamicContext {
         return uniqueNumber++;
     }
 
-    // 上下文map，静态内部类
+    /**
+     * 上下文map，静态内部类
+     */
     static class ContextMap extends HashMap<String, Object> {
         private static final long serialVersionUID = 2977601501966151582L;
 
@@ -100,7 +102,9 @@ public class DynamicContext {
         }
     }
 
-    // 上下文访问器，静态内部类,实现OGNL的PropertyAccessor
+    /**
+     * 上下文访问器，静态内部类,实现OGNL的PropertyAccessor
+     */
     static class ContextAccessor implements PropertyAccessor {
 
         @Override

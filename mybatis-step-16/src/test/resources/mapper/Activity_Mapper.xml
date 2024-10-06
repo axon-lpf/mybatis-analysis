@@ -11,20 +11,14 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <select id="queryActivityById" parameterType="java.lang.Long" resultMap="activityMap">
+
+    <select id="queryActivityById" parameterType="com.axon.mybatis.enties.ActivityDO" resultMap="activityMap">
         SELECT activity_id, activity_name, activity_desc, create_time, update_time
         FROM activity
-        WHERE activity_id = #{activityId}
+        <trim prefix="WHERE" prefixOverrides="AND | OR" suffixOverrides="and">
+            <if test="null != activityId">
+                activity_id = #{activityId}
+            </if>
+        </trim>
     </select>
-
-    <insert id="insert" parameterType="com.axon.mybatis.enties.ActivityDO">
-        INSERT INTO activity
-        (activity_id, activity_name, activity_desc, create_time, update_time)
-        VALUES (#{activityId}, #{activityName}, #{activityDesc}, now(), now())
-
-        <selectKey keyProperty="id" order="AFTER" resultType="Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-
-    </insert>
 </mapper>
