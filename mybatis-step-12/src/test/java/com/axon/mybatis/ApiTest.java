@@ -95,7 +95,7 @@ public class ApiTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         // 2. 测试验证：基本参数
-        UserDO user = userDao.queryUserInfoById(2L);
+        UserDO user = userDao.queryUserInfoById(3L);
         logger.info("测试结果：{}", JSON.toJSONString(user));
     }
 
@@ -105,7 +105,7 @@ public class ApiTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         UserDO userDO = new UserDO();
-        userDO.setId(2L);
+        userDO.setId(3L);
         userDO.setName("风清阳");
         userDO = userDao.queryUserInfo(userDO);
         // 2. 测试验证：对象参数

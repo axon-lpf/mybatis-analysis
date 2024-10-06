@@ -17,7 +17,13 @@
     </environments>
 
     <mappers>
+        <!--基于xml的配置-->
+<!--
         <mapper resource="mapper/User_Mapper.xml"/>
+-->
+        <!--注解配置-->
+        <mapper class="com.axon.mybatis.dao.IUserDao"/>
     </mappers>
+
 
 </configuration>

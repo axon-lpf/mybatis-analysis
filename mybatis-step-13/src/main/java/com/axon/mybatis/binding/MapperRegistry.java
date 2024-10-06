@@ -1,6 +1,7 @@
 package com.axon.mybatis.binding;
 
 import cn.hutool.core.lang.ClassScanner;
+import com.axon.mybatis.builder.annotation.MapperAnnotationBuilder;
 import com.axon.mybatis.session.Configuration;
 import com.axon.mybatis.session.SqlSession;
 
@@ -54,7 +55,11 @@ public class MapperRegistry {
             if (knownMappers.containsKey(type)) {
                 throw new RuntimeException("代理对象已存在");
             }
+            // 注册映射器代理工厂
             knownMappers.put(type, new MapperProxyFactory<>(type));
+
+            MapperAnnotationBuilder parse = new MapperAnnotationBuilder(config, type);
+            parse.parse();
         }
 
     }

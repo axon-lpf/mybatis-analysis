@@ -1,42 +1,35 @@
 package com.axon.mybatis.dao;
 
 
+import com.axon.mybatis.anntations.Insert;
+import com.axon.mybatis.anntations.Select;
+import com.axon.mybatis.anntations.Update;
 import com.axon.mybatis.enties.UserDO;
 
 import java.util.List;
 
+/**
+ * 基于sql注解的隐射
+ */
 public interface IUserDao {
 
-    /**
-     * 根据id 查询用户对象
-     *
-     * @param id
-     * @return
-     */
+    @Select("SELECT id, name FROM user where id = #{id}")
     UserDO queryUserInfoById(Long id);
 
+    @Select("SELECT id, name FROM user where id = #{id} and name=#{name}")
+    UserDO queryUserInfo(UserDO req);
 
-    /**
-     * 多个参数获取
-     */
-    UserDO queryUserInfo(UserDO user);
-
-    /**
-     * 查询用户列表信息
-     *
-     * @param user
-     * @return
-     */
-    List<UserDO> queryUserList(UserDO user);
-
-
+    @Select("SELECT id,name FROM user")
     List<UserDO> queryUserInfoList();
 
+    @Update("UPDATE user SET name = #{name} WHERE id = #{id}")
     int updateUserInfo(UserDO req);
 
+    @Insert("INSERT INTO user (name) VALUES (#{name})")
     void insertUserInfo(UserDO req);
 
-    int deleteUserInfoByUserId(String userId);
+    @Insert("DELETE FROM user WHERE id = #{id}")
+    int deleteUserInfoByUserId(String id);
 
 
 }

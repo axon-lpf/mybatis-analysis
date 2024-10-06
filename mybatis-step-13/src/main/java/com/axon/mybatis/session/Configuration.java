@@ -14,6 +14,7 @@ import com.axon.mybatis.executor.statement.StatementHandler;
 import com.axon.mybatis.mapping.BoundSql;
 import com.axon.mybatis.mapping.Environment;
 import com.axon.mybatis.mapping.MappedStatement;
+import com.axon.mybatis.mapping.ResultMap;
 import com.axon.mybatis.reflection.MetaObject;
 import com.axon.mybatis.reflection.factory.DefaultObjectFactory;
 import com.axon.mybatis.reflection.factory.ObjectFactory;
@@ -87,6 +88,13 @@ public class Configuration {
      * 类型处理器注册机
      */
     protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+
+
+    /**
+     *  这里映射结果，存在map中
+     */
+    protected final Map<String, ResultMap> resultMaps = new HashMap<>();
+
 
 
     /**
@@ -246,6 +254,25 @@ public class Configuration {
 
     public ObjectFactory getObjectFactory() {
         return objectFactory;
+    }
+
+
+    /**
+     *  获取隐射结果
+     * @param id
+     * @return
+     */
+    public ResultMap getResultMap(String id) {
+        return resultMaps.get(id);
+    }
+
+
+    /**
+     *  添加隐射结果
+     * @param resultMap
+     */
+    public void addResultMap(ResultMap resultMap) {
+        resultMaps.put(resultMap.getId(), resultMap);
     }
 
 

@@ -13,13 +13,24 @@ import org.dom4j.Element;
 public interface LanguageDriver {
 
     /**
-     *  sql源码处理器
+     * sql源码处理器
+     *
      * @param configuration
      * @param script
      * @param parameterType
      * @return
      */
     SqlSource createSqlSource(Configuration configuration, Element script, Class<?> parameterType);
+
+
+    /**
+     * 基于注解的解析处理
+     * @param configuration
+     * @param script
+     * @param parameterType
+     * @return
+     */
+    SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 
 
     /**

@@ -108,9 +108,20 @@ public class XMLConfigBuilder extends BaseBuilder {
         for (Element e : mapperList) {
 
             String resource = e.attributeValue("resource");
-            InputStream inputStream = Resources.getResourceAsStream(resource);
-            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource);
-            mapperParser.parse();
+            String mapperClass = e.attributeValue("class");
+
+            // 这里是一个xml的解析
+            if (resource != null && mapperClass == null) {
+                InputStream inputStream = Resources.getResourceAsStream(resource);
+                XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource);
+                mapperParser.parse();
+            }
+            //注解解析
+            else if (resource == null && mapperClass != null) {
+                Class<?> aClass = Resources.classForName(mapperClass);
+                configuration.addMapper(aClass);
+            }
+
         }
     }
 }

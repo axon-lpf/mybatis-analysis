@@ -41,7 +41,7 @@ public class ApiTest {
 
         // 2. 测试验证
         UserDO user = new UserDO();
-        user.setName("熊猫");
+        user.setName("周瑜");
         userDao.insertUserInfo(user);
         logger.info("测试结果：{}", "Insert OK");
         // 3. 提交事务
@@ -57,7 +57,7 @@ public class ApiTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         // 2. 测试验证
-        int count = userDao.deleteUserInfoByUserId("1");
+        int count = userDao.deleteUserInfoByUserId("2");
         logger.info("测试结果：{}", count == 1);
 
         // 3. 提交事务
@@ -75,7 +75,7 @@ public class ApiTest {
 
         // 2. 测试验证
         UserDO userDO = new UserDO();
-        userDO.setId(2L);
+        userDO.setId(3L);
         userDO.setName("风清阳");
         int count = userDao.updateUserInfo(userDO);
         logger.info("测试结果：{}", count);
@@ -91,7 +91,7 @@ public class ApiTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         // 2. 测试验证：基本参数
-        UserDO user = userDao.queryUserInfoById(2L);
+        UserDO user = userDao.queryUserInfoById(3L);
         logger.info("测试结果：{}", JSON.toJSONString(user));
     }
 
@@ -101,7 +101,7 @@ public class ApiTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         UserDO userDO = new UserDO();
-        userDO.setId(2L);
+        userDO.setId(3L);
         userDO.setName("风清阳");
         userDO = userDao.queryUserInfo(userDO);
         // 2. 测试验证：对象参数

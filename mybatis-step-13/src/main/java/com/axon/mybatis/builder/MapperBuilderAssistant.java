@@ -1,9 +1,6 @@
 package com.axon.mybatis.builder;
 
-import com.axon.mybatis.mapping.MappedStatement;
-import com.axon.mybatis.mapping.ResultMap;
-import com.axon.mybatis.mapping.SqlCommandType;
-import com.axon.mybatis.mapping.SqlSource;
+import com.axon.mybatis.mapping.*;
 import com.axon.mybatis.scripting.LanguageDriver;
 import com.axon.mybatis.session.Configuration;
 
@@ -69,12 +66,30 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
 
     public String applyCurrentNamespace(String base, boolean isReference) {
-        if (base == null) {
+/*        if (base == null) {
             return null;
         }
         if (isReference) {
             if (base.contains(".")) return base;
         }
+        return currentNamespace + "." + base;*/
+
+
+        if (base == null) {
+            return null;
+        }
+
+        if (isReference) {
+            if (base.contains(".")) return base;
+        } else {
+            if (base.startsWith(currentNamespace + ".")) {
+                return base;
+            }
+            if (base.contains(".")) {
+                throw new RuntimeException("Dots are not allowed in element names, please remove it from " + base);
+            }
+        }
+
         return currentNamespace + "." + base;
     }
 
@@ -89,7 +104,10 @@ public class MapperBuilderAssistant extends BaseBuilder {
         List<ResultMap> resultMaps = new ArrayList<>();
 
         if (resultMap != null) {
-            // TODO：暂无Map结果映射配置，本章节不添加此逻辑
+            String[] resultMapNames = resultMap.split(",");
+            for (String resultMapName : resultMapNames) {
+                resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+            }
         }
         /*
          * 通常使用 resultType 即可满足大部分场景
@@ -105,6 +123,27 @@ public class MapperBuilderAssistant extends BaseBuilder {
             resultMaps.add(inlineResultMapBuilder.build());
         }
         statementBuilder.resultMaps(resultMaps);
+    }
+
+
+    /**
+     * 这里添加映射结果集
+     *
+     * @param id
+     * @param type
+     * @param resultMappings
+     * @return
+     */
+    public ResultMap addResultMap(String id, Class<?> type, List<ResultMapping> resultMappings) {
+        ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
+                configuration,
+                id,
+                type,
+                resultMappings);
+
+        ResultMap resultMap = inlineResultMapBuilder.build();
+        configuration.addResultMap(resultMap);
+        return resultMap;
     }
 
 }

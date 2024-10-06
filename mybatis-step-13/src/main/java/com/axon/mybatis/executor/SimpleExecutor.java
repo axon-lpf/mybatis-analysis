@@ -37,8 +37,6 @@ public class SimpleExecutor extends BaseExecutor {
         Configuration configuration = ms.getConfiguration();
         StatementHandler statementHandler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
         try {
-            Connection connection = transaction.getConnection();
-            Statement prepare = statementHandler.prepare(connection);
             // 准备语句
             stmt = prepareStatement(statementHandler);
             // 返回结果
