@@ -66,7 +66,7 @@ public abstract class BaseExecutor implements Executor {
 
 
     @Override
-    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler,CacheKey key, BoundSql boundSql) {
+    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) {
         if (closed) {
             throw new RuntimeException("Executor was closed.");
         }
@@ -114,7 +114,7 @@ public abstract class BaseExecutor implements Executor {
         BoundSql boundSql = ms.getBoundSql(parameter);
         // 2. 创建缓存Key
         CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
-        return query(ms, parameter, rowBounds, resultHandler,key, boundSql);
+        return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
     }
 
     protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql);
@@ -169,6 +169,7 @@ public abstract class BaseExecutor implements Executor {
 
     /**
      * 关闭
+     *
      * @param statement
      */
     protected void closeStatement(Statement statement) {
@@ -179,7 +180,6 @@ public abstract class BaseExecutor implements Executor {
             }
         }
     }
-
 
 
     @Override
@@ -220,5 +220,10 @@ public abstract class BaseExecutor implements Executor {
             cacheKey.update(configuration.getEnvironment().getId());
         }
         return cacheKey;
+    }
+
+    @Override
+    public void setExecutorWrapper(Executor executor) {
+        this.wrapper = wrapper;
     }
 }

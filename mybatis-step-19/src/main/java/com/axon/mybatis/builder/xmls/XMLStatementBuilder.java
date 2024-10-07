@@ -24,15 +24,15 @@ public class XMLStatementBuilder extends BaseBuilder {
     private MapperBuilderAssistant builderAssistant;
 
 
-    public XMLStatementBuilder(Configuration configuration,MapperBuilderAssistant builderAssistant,  Element element) {
+    public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, Element element) {
         super(configuration);
         this.element = element;
-        this.builderAssistant=builderAssistant;
+        this.builderAssistant = builderAssistant;
     }
 
 
     /**
-     *  解析语句
+     * 解析语句
      */
     public void parseStatementNode() {
         String id = element.attributeValue("id");
@@ -49,6 +49,12 @@ public class XMLStatementBuilder extends BaseBuilder {
         // 获取命令类型(select|insert|update|delete)
         String nodeName = element.getName();
         SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
+
+        // 获取缓存配置
+        boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+        boolean flushCache = Boolean.parseBoolean(element.attributeValue("flushCache", String.valueOf(!isSelect)));
+        boolean useCache = Boolean.parseBoolean(element.attributeValue("useCache", String.valueOf(!isSelect)));
+
 
         // 获取默认语言驱动器
         Class<?> langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
@@ -78,6 +84,8 @@ public class XMLStatementBuilder extends BaseBuilder {
                 parameterTypeClass,
                 resultMap,
                 resultTypeClass,
+                flushCache,
+                useCache,
                 keyGenerator,
                 keyProperty,
                 langDriver);
@@ -86,7 +94,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         //MappedStatement keyStatement = configuration.getMappedStatement(id);
 
         // 添加解析 SQL
-       // configuration.addMappedStatement(mappedStatement);
+        // configuration.addMappedStatement(mappedStatement);
     }
 
 
@@ -129,6 +137,8 @@ public class XMLStatementBuilder extends BaseBuilder {
                 parameterTypeClass,
                 resultMap,
                 resultTypeClass,
+                false,
+                false,
                 keyGenerator,
                 keyProperty,
                 langDriver);

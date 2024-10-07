@@ -53,4 +53,10 @@ public abstract class BaseBuilder {
     }
 
 
+    protected Boolean booleanValueOf(String value, Boolean defaultValue) {
+        return value == null ? defaultValue : Boolean.valueOf(value);
+    }
+
+
+
 }

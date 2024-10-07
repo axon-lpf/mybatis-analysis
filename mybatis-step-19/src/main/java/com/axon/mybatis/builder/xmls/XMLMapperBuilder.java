@@ -3,6 +3,7 @@ package com.axon.mybatis.builder.xmls;
 import com.axon.mybatis.builder.BaseBuilder;
 import com.axon.mybatis.builder.MapperBuilderAssistant;
 import com.axon.mybatis.builder.ResultMapResolver;
+import com.axon.mybatis.cache.Cache;
 import com.axon.mybatis.io.Resources;
 import com.axon.mybatis.mapping.ResultFlag;
 import com.axon.mybatis.mapping.ResultMap;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 public class XMLMapperBuilder extends BaseBuilder {
 
@@ -64,7 +66,11 @@ public class XMLMapperBuilder extends BaseBuilder {
         }
 
         builderAssistant.setCurrentNamespace(currentNamespace);
-        //2.解析ResultMap
+
+        // 2. 配置cache
+        cacheElement(element.element("cache"));
+
+        //3.解析ResultMap
         resultMapElements(element.elements("resultMap"));
 
         // 配置select、 insert、 update、 delete 语句
@@ -135,4 +141,30 @@ public class XMLMapperBuilder extends BaseBuilder {
         }
 
     }
+
+
+    private void cacheElement(Element context) {
+        if (context == null) return;
+        // 基础配置信息
+        String type = context.attributeValue("type", "PERPETUAL");
+        Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
+        // 缓存队列 FIFO
+        String eviction = context.attributeValue("eviction", "FIFO");
+        Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
+        Long flushInterval = Long.valueOf(context.attributeValue("flushInterval"));
+        Integer size = Integer.valueOf(context.attributeValue("size"));
+        boolean readWrite = !Boolean.parseBoolean(context.attributeValue("readOnly", "false"));
+        boolean blocking = !Boolean.parseBoolean(context.attributeValue("blocking", "false"));
+
+        // 解析额外属性信息；<property name="cacheFile" value="/tmp/xxx-cache.tmp"/>
+        List<Element> elements = context.elements();
+        Properties props = new Properties();
+        for (Element element : elements) {
+            props.setProperty(element.attributeValue("name"), element.attributeValue("value"));
+        }
+        // 构建缓存
+        builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
+    }
+
+
 }

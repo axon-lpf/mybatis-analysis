@@ -76,4 +76,8 @@ public interface Executor {
     CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql);
 
 
+
+    void setExecutorWrapper(Executor executor);
+
+
 }

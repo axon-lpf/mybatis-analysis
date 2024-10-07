@@ -1,5 +1,6 @@
 package com.axon.mybatis.mapping;
 
+import com.axon.mybatis.cache.Cache;
 import com.axon.mybatis.executor.keygen.Jdbc3KeyGenerator;
 import com.axon.mybatis.executor.keygen.KeyGenerator;
 import com.axon.mybatis.executor.keygen.NoKeyGenerator;
@@ -42,6 +43,10 @@ public class MappedStatement {
     private String resource;
 
     private boolean flushCacheRequired;
+
+    private Cache cache;
+    private boolean useCache;
+
 
 
 
@@ -93,6 +98,22 @@ public class MappedStatement {
             mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
             return this;
         }
+
+        public Builder cache(Cache cache) {
+            mappedStatement.cache = cache;
+            return this;
+        }
+
+        public Builder flushCacheRequired(boolean flushCacheRequired) {
+            mappedStatement.flushCacheRequired = flushCacheRequired;
+            return this;
+        }
+
+        public Builder useCache(boolean useCache) {
+            mappedStatement.useCache = useCache;
+            return this;
+        }
+
 
     }
 
@@ -176,4 +197,12 @@ public class MappedStatement {
         return flushCacheRequired;
     }
 
+
+    public boolean isUseCache() {
+        return useCache;
+    }
+
+    public Cache getCache() {
+        return cache;
+    }
 }

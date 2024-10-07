@@ -104,4 +104,10 @@ public class DefaultSqlSession implements SqlSession {
         return configuration;
     }
 
+    @Override
+    public void close() {
+        // isCommitOrRollbackRequired(false)
+        executor.close(false);
+    }
+
 }

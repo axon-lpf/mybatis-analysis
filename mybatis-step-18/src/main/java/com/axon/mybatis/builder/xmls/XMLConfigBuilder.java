@@ -54,6 +54,10 @@ public class XMLConfigBuilder extends BaseBuilder {
         try {
             //解析插件的拦截器链
             pluginElement(root.element("plugins"));
+
+            // 设置
+            settingsElement(root.element("settings"));
+
             //设置环境
             environmentsElement(root.element("environments"));
 

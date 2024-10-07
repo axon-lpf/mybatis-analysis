@@ -77,6 +77,7 @@ public class MapperAnnotationBuilder {
             }
             boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
+
             String resultMapId = null;
             if (isSelect) {
                 resultMapId = parseResultMap(method);
@@ -88,6 +89,8 @@ public class MapperAnnotationBuilder {
                     parameterTypeClass,
                     resultMapId,
                     getReturnType(method),
+                    false,
+                    false,
                     keyGenerator,
                     keyProperty,
                     languageDriver
@@ -123,7 +126,8 @@ public class MapperAnnotationBuilder {
     }
 
     /**
-     *  存储隐射结果
+     * 存储隐射结果
+     *
      * @param method
      * @return
      */
@@ -144,7 +148,6 @@ public class MapperAnnotationBuilder {
         assistant.addResultMap(resultMapId, returnType, new ArrayList<>());
         return resultMapId;
     }
-
 
 
     private SqlCommandType getSqlCommandType(Method method) {
