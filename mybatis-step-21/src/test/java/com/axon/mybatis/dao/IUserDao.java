@@ -13,23 +13,6 @@ import java.util.List;
  */
 public interface IUserDao {
 
-    @Select("SELECT id, name FROM user where id = #{id}")
     UserDO queryUserInfoById(Long id);
-
-    @Select("SELECT id, name FROM user where id = #{id} and name=#{name}")
-    UserDO queryUserInfo(UserDO req);
-
-    @Select("SELECT id,name FROM user")
-    List<UserDO> queryUserInfoList();
-
-    @Update("UPDATE user SET name = #{name} WHERE id = #{id}")
-    int updateUserInfo(UserDO req);
-
-    @Insert("INSERT INTO user (name) VALUES (#{name})")
-    void insertUserInfo(UserDO req);
-
-    @Insert("DELETE FROM user WHERE id = #{id}")
-    int deleteUserInfoByUserId(String id);
-
 
 }

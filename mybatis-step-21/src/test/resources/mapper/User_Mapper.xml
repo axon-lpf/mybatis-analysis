@@ -3,45 +3,9 @@
 <mapper namespace="com.axon.mybatis.dao.IUserDao">
 
     <select id="queryUserInfoById" parameterType="java.lang.Long" resultType="com.axon.mybatis.enties.UserDO">
-    /*这里是个坑，需要转换， 不转化无法隐射成java中的long 类型，或者在javad代码中进行验证转换*/
         SELECT CAST(id AS SIGNED) AS id, name
         FROM user
         WHERE id = #{id}
     </select>
-
-
-    <select id="queryUserInfo" parameterType="com.axon.mybatis.enties.UserDO" resultType="com.axon.mybatis.enties.UserDO">
-        SELECT CAST(id AS SIGNED) AS id, name FROM user
-        where id = #{id}  and  name=#{name}
-    </select>
-
-    <select id="queryUserList" parameterType="com.axon.mybatis.enties.UserDO"
-            resultType="com.axon.mybatis.enties.UserDO">
-        SELECT id, name
-        FROM user
-    </select>
-
-
-
-    <select id="queryUserInfoList" resultType="com.axon.mybatis.enties.UserDO">
-        SELECT id, name
-        FROM user
-    </select>
-
-    <update id="updateUserInfo" parameterType="com.axon.mybatis.enties.UserDO">
-        UPDATE user
-        SET name = #{name}
-        WHERE id = #{id}
-    </update>
-
-    <insert id="insertUserInfo" parameterType="com.axon.mybatis.enties.UserDO">
-        INSERT INTO user
-            (name)
-        VALUES (#{name})
-    </insert>
-
-    <delete id="deleteUserInfoByUserId" parameterType="java.lang.String">
-        DELETE FROM user WHERE id = #{id}
-    </delete>
 
 </mapper>

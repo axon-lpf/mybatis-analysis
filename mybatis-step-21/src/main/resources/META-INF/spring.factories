@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.axon.mybatis.springboot.autoconfigure.MybatisAutoConfiguration

@@ -1,4 +1,4 @@
-package com.axon.mybatis.spring;
+package com.axon.mybatis.springboot.spring;
 
 import com.axon.mybatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;

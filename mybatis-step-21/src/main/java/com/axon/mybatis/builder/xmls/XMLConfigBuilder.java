@@ -44,6 +44,13 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
     }
 
+    public XMLConfigBuilder(Document document) {
+        // 1. 调用父类初始化Configuration
+        super(new Configuration());
+        // 2. dom4j 处理 xml
+        root = document.getRootElement();
+    }
+
     /**
      * 解析进行转换操作
      *

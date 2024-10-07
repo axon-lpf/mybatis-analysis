@@ -1,4 +1,4 @@
-package com.axon.mybatis.spring;
+package com.axon.mybatis.springboot.spring;
 
 import org.springframework.asm.ClassReader;
 import org.springframework.core.NestedIOException;
