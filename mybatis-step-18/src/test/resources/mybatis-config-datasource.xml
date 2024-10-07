@@ -4,6 +4,11 @@
 
 <configuration>
 
+    <settings>
+        <!--缓存级别：SESSION/STATEMENT-->
+        <setting name="localCacheScope" value="SESSION"/>
+    </settings>
+
     <plugins>
         <plugin interceptor="com.axon.mybatis.TestPlugin">
             <property name="test00" value="1000000"/>

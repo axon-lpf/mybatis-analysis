@@ -338,8 +338,20 @@ public class Configuration {
         interceptorChain.addInterceptor(interceptorInstance);
     }
 
+    /**
+     *  获取缓存策略
+     * @return
+     */
     public LocalCacheScope getLocalCacheScope() {
         return localCacheScope;
+    }
+
+    /**
+     *  设置缓存策略
+     * @param localCacheScope
+     */
+    public void setLocalCacheScope(LocalCacheScope localCacheScope) {
+        this.localCacheScope = localCacheScope;
     }
 
 
