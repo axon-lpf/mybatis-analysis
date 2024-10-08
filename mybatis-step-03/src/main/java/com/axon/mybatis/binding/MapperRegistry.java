@@ -39,7 +39,6 @@ public class MapperRegistry {
     /**
      * 添加代理对象
      */
-
     public <T> void addMapper(Class<T> type) {
         //Mapper必须是接口才能够进行注册
         if (type.isInterface()) {
@@ -48,7 +47,6 @@ public class MapperRegistry {
             }
             knownMappers.put(type, new MapperProxyFactory<>(type));
         }
-
     }
 
     public void addMappers(String packageName) {

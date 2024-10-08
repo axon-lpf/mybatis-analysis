@@ -8,8 +8,10 @@ public class TypeAliasRegistry {
 
     private final Map<String, Class<?>> TYP_ALIASES = new HashMap<>();
 
+    /**
+     * 在构造函数中注册系统内置的类型别名
+     */
     public TypeAliasRegistry() {
-        // 在构造函数中注册系统内置的类型别名
         registerAlias("string", String.class);
         registerAlias("int", Integer.class);
         registerAlias("long", Long.class);

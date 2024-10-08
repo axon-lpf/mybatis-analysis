@@ -32,7 +32,6 @@ public class Configuration {
         typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
         typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
 
-
     }
 
 

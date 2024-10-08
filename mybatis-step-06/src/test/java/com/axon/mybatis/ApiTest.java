@@ -17,7 +17,61 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * 本章主要是添加了sql的调用，以及事务的相关处理， 数据源，事务处理
+ * 本章节主要是添加了数据源链接的非池化和池化两种链接模式
+ *  1.  UnpooledDataSourceFactory 非池化创建数据源的工厂， UnpooledDataSource 无池化具体的实现， 去实现 dataSource相关接口
+ *      核心代码块：
+     *     @Override
+     *     public Connection getConnection() throws SQLException {
+     *         return doGetConnection(userName, password);
+     *     }
+ *
+ *       这块代码，每次则会创建一个新的链接。
+ *
+ *  2.  PooledDataSourceFactory 池化创建数据源的工厂， PooledDataSource 池化的具体实现 。  PooledDataSource 实现dataSource相关接口
+ *      核心代码块：
+ *          @Override
+     *     public Connection getConnection() throws SQLException {
+     *         return popConnection(dataSource.getUserName(), dataSource.getPassword()).getProxyConnection();
+     *     }
+ *      这块代码，如果连接池中有有存活的链接，则获取， 如果没有，则等待，等上一个链接释放。如果一直获取不到则超时
+ *
+ *   3.Configuration 初始化时，加入对应的别名处理
+ *       核心代码块：
+ *              public Configuration() {
+         *         typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+         *         typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
+         *         typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
+         *         typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
+ *     }
+ *
+ *   4. 解析时，获取到对应的数据源策略
+ *      核心代码块：
+ *           DataSourceFactory dataSourceFactory = (DataSourceFactory) typeAliasRegistry.resolveAlias(dataSourceElement.attributeValue("type")).newInstance();
+ *           dataSourceElement.attributeValue("type") 获取的是dataSource的属性的值，即别名， 然后从typeAliasRegistry中去获取，并创建对应的实例
+ *
+ *  3.  具体的使用
+ *      核心代码块：
+ *              @Override
+             *     public <T> T selectOne(String statement, Object parameter) {
+             *         MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+             *         Environment environment = configuration.getEnvironment();
+             *         Connection connection=null;
+             *         try {
+ *                         //这里获取链接
+             *             connection = environment.getDataSource().getConnection();
+             *             BoundSql boundSql = mappedStatement.getBoundSql();
+             *             PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getSql());
+             *             preparedStatement.setLong(1, Long.parseLong(((Object[]) parameter)[0].toString()));
+             *             ResultSet resultSet = preparedStatement.executeQuery();
+             *             List<T> objects = resultSet2Obj(resultSet, Class.forName(boundSql.getResultType()));
+             *             return objects.get(0);
+             *         } catch (Exception e) {
+             *             throw new RuntimeException(e);
+             *         }
+             *     }
+ *
+ *
+ *
  */
 public class ApiTest {
 

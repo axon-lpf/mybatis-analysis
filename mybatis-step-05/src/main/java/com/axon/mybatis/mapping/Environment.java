@@ -6,6 +6,24 @@ import javax.sql.DataSource;
 
 public class Environment {
 
+
+    /**
+     *  环境id
+     */
+    private final String id;
+    /**
+     *  事务工程
+     */
+    private final TransactionFactory transactionFactory;
+
+    /**
+     *  数据源
+     */
+    private final DataSource dataSource;
+
+
+
+
     public Environment(String id, TransactionFactory transactionFactory, DataSource dataSource) {
         this.id = id;
         this.transactionFactory = transactionFactory;
@@ -24,12 +42,7 @@ public class Environment {
         return dataSource;
     }
 
-    // 环境id
-    private final String id;
-    // 事务工厂
-    private final TransactionFactory transactionFactory;
-    // 数据源
-    private final DataSource dataSource;
+
 
 
     public static class Builder {
