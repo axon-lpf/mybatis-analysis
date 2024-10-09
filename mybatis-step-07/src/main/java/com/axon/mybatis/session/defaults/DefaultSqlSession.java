@@ -41,16 +41,7 @@ public class DefaultSqlSession implements SqlSession {
             return objects.get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            //为了测试回收链接
-           /* try {
-                connection.close();
-
-            }catch (Exception exception) {
-
-            }*/
         }
-
     }
 
     @Override
