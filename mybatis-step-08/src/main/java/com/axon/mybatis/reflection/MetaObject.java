@@ -8,15 +8,41 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 主要功能和作用
+ *
+ * 	1.	简化对象属性的读写操作
+ * MetaObject 提供了一组方法来读取和修改对象的属性，无论对象是普通的 JavaBean，Map 还是集合类。它能自动处理属性的获取和设置，避免繁琐的手工编写反射代码，提高了代码的可读性和可维护性。
+ * 	2.	支持嵌套属性操作
+ * MetaObject 支持对嵌套属性进行操作，例如 person.address.street，你可以通过一行代码访问和修改嵌套的属性值，而不必手动逐层获取对象。
+ * 	3.	处理集合和数组类型的属性
+ * 对于数组、List、Map 等集合类型的数据，MetaObject 提供了便利的接口来获取和修改它们的内容。它支持索引访问、动态添加元素等功能。
+ * 	4.	反射包装
+ * MetaObject 是对 Java 反射 API 的封装。它隐藏了 Java 反射的复杂性，提供了一种更加简洁和安全的方式来操作对象属性。比如，处理私有字段或属性时，MetaObject 能轻松绕过访问权限限制。
+ * 	5.	辅助动态 SQL 生成
+ * 在 MyBatis 中，MetaObject 常被用于动态 SQL 的生成中，特别是在 OGNL 表达式或者类似操作中，通过 MetaObject 可以快速操作对象属性，帮助动态构建查询条件。
+ * 	6.	插件和拦截器中的常用工具
+ * MetaObject 在 MyBatis 插件（Interceptor）中非常常用。例如，拦截器可以通过 MetaObject 对 MyBatis 内部对象（如 MappedStatement、BoundSql）进行修改，动态改变 SQL 的执行方式。
+ */
 public class MetaObject {
 
-    // 原对象
+    /**
+     *  原始的对象
+     */
     private Object originalObject;
-    // 对象包装器
+    /**
+     *  对象包装器
+     */
     private ObjectWrapper objectWrapper;
-    // 对象工厂
+
+    /**
+     *  对象工厂
+     */
     private ObjectFactory objectFactory;
-    // 对象包装工厂
+
+    /**
+     *  对象包装工厂
+     */
     private ObjectWrapperFactory objectWrapperFactory;
 
     private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory) {
@@ -64,37 +90,65 @@ public class MetaObject {
     }
 
     /* --------以下方法都是委派给 ObjectWrapper------ */
-    // 查找属性
+
+    /**
+     *  查找属性
+     * @param propName
+     * @param useCamelCaseMapping
+     * @return
+     */
     public String findProperty(String propName, boolean useCamelCaseMapping) {
         return objectWrapper.findProperty(propName, useCamelCaseMapping);
     }
 
-    // 取得getter的名字列表
+    /**
+     *  获取得getter的名字列表
+     * @return
+     */
     public String[] getGetterNames() {
         return objectWrapper.getGetterNames();
     }
 
-    // 取得setter的名字列表
+    /**
+     * 获得setter的名字列表
+     * @return
+     */
     public String[] getSetterNames() {
         return objectWrapper.getSetterNames();
     }
 
-    // 取得setter的类型列表
+    /**
+     * 取得setter的类型列表
+     * @param name
+     * @return
+     */
     public Class<?> getSetterType(String name) {
         return objectWrapper.getSetterType(name);
     }
 
-    // 取得getter的类型列表
+    /**
+     * 取得getter的类型列表
+     * @param name
+     * @return
+     */
     public Class<?> getGetterType(String name) {
         return objectWrapper.getGetterType(name);
     }
 
-    //是否有指定的setter
+    /**
+     * 是否有指定的setter
+     * @param name
+     * @return
+     */
     public boolean hasSetter(String name) {
         return objectWrapper.hasSetter(name);
     }
 
-    // 是否有指定的getter
+    /**
+     * 是否有指定的getter
+     * @param name
+     * @return
+     */
     public boolean hasGetter(String name) {
         return objectWrapper.hasGetter(name);
     }
@@ -151,7 +205,11 @@ public class MetaObject {
         }
     }
 
-    // 为属性生成元对象
+    /**
+     *  为属性生成元对象
+     * @param name
+     * @return
+     */
     public MetaObject metaObjectForProperty(String name) {
         // 实际是递归调用
         Object value = getValue(name);
@@ -162,17 +220,27 @@ public class MetaObject {
         return objectWrapper;
     }
 
-    // 是否是集合
+    /**
+     *  判断是否是集合
+     * @return
+     */
     public boolean isCollection() {
         return objectWrapper.isCollection();
     }
 
-    // 添加属性
+    /**
+     *  添加属性
+     * @param element
+     */
     public void add(Object element) {
         objectWrapper.add(element);
     }
 
-    // 添加属性
+    /**
+     *  添加属性集合
+     * @param list
+     * @param <E>
+     */
     public <E> void addAll(List<E> list) {
         objectWrapper.addAll(list);
     }

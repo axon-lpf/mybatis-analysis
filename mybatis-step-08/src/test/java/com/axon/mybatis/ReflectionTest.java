@@ -10,11 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * @author 小傅哥，微信：fustack
- * @description 反射类
- * @github https://github.com/fuzhengwei
- * @Copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
+ *  反射类的测试
+ *  本章节主要是对反射的相关功能进行了封装，包装成元数据对象
  */
 public class ReflectionTest {
 
