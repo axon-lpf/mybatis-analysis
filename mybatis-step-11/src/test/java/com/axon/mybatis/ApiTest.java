@@ -17,7 +17,49 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * 本章主要是添加了sql的调用，以及事务的相关处理， 数据源，事务处理
+ * 本章节主要添加了对ResultSetHandler的处理和实现，即对查询结果的封装和处理
+ *   1.ResultSetHandler 由DefaultResultSetHandler的类进行实现，  StatementHandler 中有依赖ResultSetHandler，在处理返回结果的时候调用  ResultSetHandler
+ *   核心代码块：
+ *     1.1> 初始化完成 默认的ResultSetHandler的赋值
+ *                 public BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+             *         this.configuration = mappedStatement.getConfiguration();
+             *         this.executor = executor;
+             *         this.mappedStatement = mappedStatement;
+             *         this.parameterObject = parameterObject;
+             *         this.boundSql = boundSql;
+             *         this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
+ *                      // resultSet的赋值
+             *         this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, resultHandler, boundSql);
+ *
+ *          }
+ *
+ *      1.2> PrepareStatementHandler中
+ *             @Override
+         *     public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
+         *         PreparedStatement ps = (PreparedStatement) statement;
+         *         ps.execute();
+ *                 //处理返回结果
+         *         return resultSetHandler.<E>handleResultSets(ps);
+         *     }
+ *      1.3> ResulstSetHandler中的处理
+ *            public List<Object> handleResultSets(Statement stmt) throws SQLException {
+         *         final List<Object> multipleResults = new ArrayList<>();
+         *         int resultSetCount = 0;
+         *         ResultSetWrapper rsw = new ResultSetWrapper(stmt.getResultSet(), configuration);
+         *         List<ResultMap> resultMaps = mappedStatement.getResultMaps();
+         *         while (rsw != null && resultMaps.size() > resultSetCount) {
+         *             ResultMap resultMap = resultMaps.get(resultSetCount);
+         *             handleResultSet(rsw, resultMap, multipleResults, null);
+         *             rsw = getNextResultSet(stmt);
+         *             resultSetCount++;
+         *         }
+         *         return multipleResults.size() == 1 ? (List<Object>) multipleResults.get(0) : multipleResults;
+         *     }
+ *
+ *
+ *
+ *
+ *
  */
 public class ApiTest {
 
