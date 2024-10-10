@@ -58,9 +58,6 @@ public class XMLStatementBuilder extends BaseBuilder {
                 resultMap,
                 resultTypeClass,
                 langDriver);
-
-        // 添加解析 SQL
-       // configuration.addMappedStatement(mappedStatement);
     }
 
 }
