@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * 本章主要是添加了sql的调用，以及事务的相关处理， 数据源，事务处理
+ * 本章主要添加了对动态sql的解析
+ *
  */
 public class ApiTest {
 
