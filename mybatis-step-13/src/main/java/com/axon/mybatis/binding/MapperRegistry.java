@@ -61,7 +61,6 @@ public class MapperRegistry {
             MapperAnnotationBuilder parse = new MapperAnnotationBuilder(config, type);
             parse.parse();
         }
-
     }
 
     public void addMappers(String packageName) {

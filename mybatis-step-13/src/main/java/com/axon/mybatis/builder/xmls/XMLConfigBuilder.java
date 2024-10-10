@@ -102,9 +102,7 @@ public class XMLConfigBuilder extends BaseBuilder {
      * @throws DocumentException
      */
     private void mapperElement(Element mappers) throws IOException, DocumentException, ClassNotFoundException {
-
         List<Element> mapperList = mappers.elements("mapper");
-
         for (Element e : mapperList) {
 
             String resource = e.attributeValue("resource");

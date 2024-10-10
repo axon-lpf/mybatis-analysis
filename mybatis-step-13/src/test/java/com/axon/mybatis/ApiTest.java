@@ -16,7 +16,100 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 本章主要是添加了sql的调用，以及事务的相关处理， 数据源，事务处理
+ * 本章节主要添加了基于注解的增删改查的主要流程
+ * 主要核心代码块
+ * 1.1>创建对应的anntation的注解  @select  @update  @delete @insert
+ * 1.2>XMLConfigBuilder中加入注解解析的逻辑
+ *       private void mapperElement(Element mappers) throws IOException, DocumentException, ClassNotFoundException {
+ *         List<Element> mapperList = mappers.elements("mapper");
+ *         for (Element e : mapperList) {
+ *             String resource = e.attributeValue("resource");
+ *             String mapperClass = e.attributeValue("class");
+ *             // 这里是一个xml的解析
+ *             if (resource != null && mapperClass == null) {
+ *                 InputStream inputStream = Resources.getResourceAsStream(resource);
+ *                 XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource);
+ *                 mapperParser.parse();
+ *             }
+ *             //TODO   这里是注解解析的逻辑   xml配置           <mapper class="com.axon.mybatis.dao.IUserDao"/>
+ *             else if (resource == null && mapperClass != null) {
+ *                 Class<?> aClass = Resources.classForName(mapperClass);
+ *                 configuration.addMapper(aClass);
+ *             }
+ *         }
+ *     }
+ *
+ * 1.3> MapperRegistry中对addMpper进行修改
+ *          public <T> void addMapper(Class<T> type) {
+ *         //Mapper必须是接口才能够进行注册
+ *         if (type.isInterface()) {
+ *             if (knownMappers.containsKey(type)) {
+ *                 throw new RuntimeException("代理对象已存在");
+ *             }
+ *             // 注册映射器代理工厂
+ *             knownMappers.put(type, new MapperProxyFactory<>(type));
+ *
+ *             // TODO  加入对注解解析的功能
+ *             MapperAnnotationBuilder parse = new MapperAnnotationBuilder(config, type);
+ *             parse.parse();
+ *         }
+ *     }
+ *
+ * 1.4> MapperAnnotationBuilder中的核心方法
+ *       public void parse() {
+ *         String resource = type.toString();
+ *         if (!configuration.isResourceLoaded(resource)) {
+ *             assistant.setCurrentNamespace(type.getName());
+ *
+ *             Method[] methods = type.getMethods();
+ *             for (Method method : methods) {
+ *                 if (!method.isBridge()) {
+ *                     // 解析语句
+ *                     parseStatement(method);
+ *                 }
+ *             }
+ *         }
+ *     }
+ *
+ *     private void parseStatement(Method method) {
+ *         Class<?> parameterTypeClass = getParameterType(method);
+ *         LanguageDriver languageDriver = getLanguageDriver(method);
+ *         SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
+ *
+ *         if (sqlSource != null) {
+ *             final String mappedStatementId = type.getName() + "." + method.getName();
+ *             SqlCommandType sqlCommandType = getSqlCommandType(method);
+ *             boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+ *
+ *             String resultMapId = null;
+ *             if (isSelect) {
+ *                 resultMapId = parseResultMap(method);
+ *             }
+ *
+ *             // TODO 解析完成之后加入 MappedStatement中去， 用于后续的调用
+ *             assistant.addMappedStatement(
+ *                     mappedStatementId,
+ *                     sqlSource,
+ *                     sqlCommandType,
+ *                     parameterTypeClass,
+ *                     resultMapId,
+ *                     getReturnType(method),
+ *                     languageDriver
+ *             );
+ *         }
+ *     }
+ *
+ *  1.5>在执行sql的时候从MappedStatement 中获取 ， 根据mappedStatementId
+ *          @Override
+ *     public <E> List<E> selectList(String statement, Object parameter) {
+ *         logger.info("执行查询 statement：{} parameter：{}", statement, JSON.toJSONString(parameter));
+ *         // TODO 获取操作
+ *         MappedStatement ms = configuration.getMappedStatement(statement);
+ *         return executor.query(ms, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, ms.getSqlSource().getBoundSql(parameter));
+ *     }
+ *
+ *
+ *
  */
 public class ApiTest {
 
