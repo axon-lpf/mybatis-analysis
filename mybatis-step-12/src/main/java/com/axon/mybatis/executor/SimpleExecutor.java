@@ -72,7 +72,6 @@ public class SimpleExecutor extends BaseExecutor {
         } finally {
             closeStatement(stmt);
         }
-
     }
 
 

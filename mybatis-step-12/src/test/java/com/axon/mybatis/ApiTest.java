@@ -20,7 +20,56 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * 本章主要是添加了sql的调用，以及事务的相关处理， 数据源，事务处理
+ * 本章主要是添加了update、 delete、 insert相关的核心流程
+ * 主要核心代码块：
+ * 1.1> DefaultSqlSession中添加了以下方法
+ *        @Override
+ *     public int insert(String statement, Object parameter) {
+ *         // 在 Mybatis 中 insert 调用的是 update
+ *         return update(statement, parameter);
+ *     }
+ *
+ *     @Override
+ *     public Object delete(String statement, Object parameter) {
+ *         // 这里也是调用的update方法
+ *         return update(statement, parameter);
+ *     }
+ *
+ *     @Override
+ *     public int update(String statement, Object parameter) {
+ *         MappedStatement ms = configuration.getMappedStatement(statement);
+ *         try {
+ *             return executor.update(ms, parameter);
+ *         } catch (SQLException e) {
+ *             throw new RuntimeException("Error updating database.  Cause: " + e);
+ *         }
+ *     }
+ *
+ * 1.2>Executor类中添加以下方法
+ *     @Override
+ *     public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
+ *         Statement stmt = null;
+ *         try {
+ *             Configuration configuration = ms.getConfiguration();
+ *             // 新建一个 StatementHandler
+ *             StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
+ *             // 准备语句
+ *             stmt = prepareStatement(handler);
+ *             // StatementHandler.update
+ *             return handler.update(stmt);
+ *         } finally {
+ *             closeStatement(stmt);
+ *         }
+ *     }
+ *
+ * 1.3>StatementHandler 中也添加 update的方法处理，与query不同的是，query返回的查询结果对象， update是返回的受影响的行数
+ *     @Override
+ *     public int update(Statement statement) throws SQLException {
+ *         PreparedStatement ps = (PreparedStatement) statement;
+ *         ps.execute();
+ *         return ps.getUpdateCount();
+ *     }
+ *
  */
 public class ApiTest {
 
