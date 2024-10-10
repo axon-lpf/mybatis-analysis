@@ -51,6 +51,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         Class<?> langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
         LanguageDriver langDriver = configuration.getLanguageRegistry().getDriver(langClass);
 
+        // 核心代码解析
         processSelectKeyNodes(id, parameterTypeClass, langDriver);
 
 
