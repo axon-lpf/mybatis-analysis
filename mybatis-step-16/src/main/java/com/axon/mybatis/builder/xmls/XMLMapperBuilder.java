@@ -18,6 +18,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 2. XMLMapperBuilder
+ *
+ * 	•	职责和作用：
+ * 	•	XMLMapperBuilder 是 MyBatis 中用于解析映射文件（Mapper.xml）的类，负责加载和解析每个映射文件中的 SQL 语句定义、结果映射等信息。
+ * 	•	主要功能：
+ * 	•	解析 <mapper> 标签：处理 Mapper 映射文件中的 SQL 语句定义、<resultMap>、<parameterMap>、<sql> 等标签。
+ * 	•	将解析到的 SQL 语句（如 select、insert、update、delete）注册到 Configuration 对象中，以便在执行时可以找到对应的 SQL 语句。
+ * 	•	总结：
+ * XMLMapperBuilder 负责解析每个 Mapper.xml 文件中的 SQL 定义、结果映射等信息，并将它们加载到 MyBatis 的 Configuration 中，用于后续 SQL 执行时的映射和操作。
+ */
 public class XMLMapperBuilder extends BaseBuilder {
 
     private Element element;

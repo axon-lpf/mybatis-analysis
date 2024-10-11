@@ -25,6 +25,66 @@ import java.io.Reader;
 /**
  * 本章主要添加了对动态sql的解析
  *
+ * 核心代码块：
+ * 1.1> 添加对应的动态sql解析处理器handler 如： ifHandler、TrimHandler
+ * 1.2> XMLScriptBuilder 实例化时，将解析器加入到缓存中。
+ *          public XMLScriptBuilder(Configuration configuration, Element element, Class<?> parameterType) {
+ *         super(configuration);
+ *         this.element = element;
+ *         this.parameterType = parameterType;
+ *         //TODO 初始化解析器
+ *         initNodeHandlerMap();
+ *     }
+ *     // 初始化解析器方法
+ *     private void initNodeHandlerMap() {
+ *         // 9种，实现其中2种 trim/where/set/foreach/if/choose/when/otherwise/bind
+ *         nodeHandlerMap.put("trim", new TrimHandler(configuration, this));
+ *         nodeHandlerMap.put("if", new IfHandler(configuration, this));
+ *     }
+ *
+ * 1.3> XMLScriptBuilder核心的解析步骤
+ *     public SqlSource parseScriptNode() {
+ *          //TODO 核心的解析步骤
+ *         List<SqlNode> contents = parseDynamicTags(element);
+ *         MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+ *         SqlSource sqlSource = null;
+ *         // 判断是否是是动态sql  TODO 核心点判断是动态合适静态， 动态则走动态解析的步骤
+ *         if (isDynamic) {
+ *             sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+ *         } else {
+ *             sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
+ *         }
+ *         return sqlSource;
+ *     }
+ *·    //TODO 解析步骤的具体详情方法
+ *     public List<SqlNode> parseDynamicTags(Element element) {
+ *         List<SqlNode> contents = new ArrayList<>();
+ *         List<Node> children = element.content();
+ *         for (Node child : children) {
+ *             if (child.getNodeType() == Node.TEXT_NODE || child.getNodeType() == Node.CDATA_SECTION_NODE) {
+ *                 String data = child.getText();
+ *                 TextSqlNode textSqlNode = new TextSqlNode(data);
+ *                 if (textSqlNode.isDynamic()) {
+ *                     contents.add(textSqlNode);
+ *                     isDynamic = true;
+ *                 } else {
+ *                     contents.add(new StaticTextSqlNode(data));
+ *                 }
+ *             } else if (child.getNodeType() == Node.ELEMENT_NODE) {
+ *                 String nodeName = child.getName();
+ *                 NodeHandler handler = nodeHandlerMap.get(nodeName);
+ *                 if (handler == null) {
+ *                     throw new RuntimeException("Unknown element <" + nodeName + "> in SQL statement.");
+ *                 }
+ *                 handler.handleNode(element.element(child.getName()), contents);
+ *                 isDynamic = true;
+ *             }
+ *         }
+ *         return contents;
+ *     }
+ *
+ *
+ *
  */
 public class ApiTest {
 

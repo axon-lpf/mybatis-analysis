@@ -19,6 +19,18 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * 1. XMLConfigBuilder
+ *
+ * 	•	职责和作用：
+ * 	•	XMLConfigBuilder 是 MyBatis 中用于解析主配置文件（mybatis-config.xml）的类。它主要负责加载和解析 MyBatis 的核心配置文件。
+ * 	•	主要功能：
+ * 	•	解析全局配置：如 environment、settings、typeAliases、mappers 等。
+ * 	•	初始化 MyBatis 的 Configuration 对象，读取配置文件中的信息并将其设置到 Configuration 对象中。
+ * 	•	解析和加载 typeAlias（类型别名）、typeHandlers（类型处理器）、mappers（映射器）等全局配置信息。
+ * 	•	总结：
+ * XMLConfigBuilder 的主要作用是将 MyBatis 核心配置文件（mybatis-config.xml）中的内容解析并初始化到 Configuration 对象中，为 MyBatis 的运行提供必要的配置信息。
+ */
 public class XMLConfigBuilder extends BaseBuilder {
 
     private Element root;

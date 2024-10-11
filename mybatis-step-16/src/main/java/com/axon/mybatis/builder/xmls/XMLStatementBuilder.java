@@ -16,6 +16,18 @@ import org.dom4j.Element;
 import java.util.List;
 import java.util.Locale;
 
+
+/**
+ * 3. XMLStatementBuilder
+ * <p>
+ * •	职责和作用：
+ * •	XMLStatementBuilder 是 MyBatis 中用于解析具体的 SQL 语句（select、insert、update、delete 等）的类，主要负责将 SQL 语句中的配置信息解析成可执行的 MappedStatement 对象。
+ * •	主要功能：
+ * •	解析 <select>、<insert>、<update>、<delete> 等 SQL 语句，并将它们转换为 MappedStatement 对象，存储 SQL 语句的具体信息，如 SQL 的参数类型、返回值类型、执行类型（查询、更新等）。
+ * •	XMLStatementBuilder 主要在 XMLMapperBuilder 中调用，帮助解析 SQL 语句。
+ * •	总结：
+ * XMLStatementBuilder 负责将每一个 SQL 语句的 XML 标签转换为可执行的 MappedStatement，并将其与 Mapper 关联，供 MyBatis 执行 SQL 使用。
+ */
 public class XMLStatementBuilder extends BaseBuilder {
 
     private String currentNamespace;
@@ -24,15 +36,15 @@ public class XMLStatementBuilder extends BaseBuilder {
     private MapperBuilderAssistant builderAssistant;
 
 
-    public XMLStatementBuilder(Configuration configuration,MapperBuilderAssistant builderAssistant,  Element element) {
+    public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, Element element) {
         super(configuration);
         this.element = element;
-        this.builderAssistant=builderAssistant;
+        this.builderAssistant = builderAssistant;
     }
 
 
     /**
-     *  解析语句
+     * 解析语句
      */
     public void parseStatementNode() {
         String id = element.attributeValue("id");
@@ -86,7 +98,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         //MappedStatement keyStatement = configuration.getMappedStatement(id);
 
         // 添加解析 SQL
-       // configuration.addMappedStatement(mappedStatement);
+        // configuration.addMappedStatement(mappedStatement);
     }
 
 
