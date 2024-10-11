@@ -14,6 +14,10 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     private String resource;
     private SqlSessionFactory sqlSessionFactory;
 
+    /**
+     *  初始化操作， 去解析mybatis中个mapper、config配置加入到对应的缓存中去
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         try (Reader reader = Resources.getResourceAsReader(resource)) {

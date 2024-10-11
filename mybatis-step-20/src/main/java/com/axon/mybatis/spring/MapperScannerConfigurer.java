@@ -22,6 +22,11 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
     private String basePackage;
     private SqlSessionFactory sqlSessionFactory;
 
+    /**
+     * 预先扫描出所有的dao接口， 并构建他们的beanDefinition, 设置其的BeanClass为代理对象，代理到dao去操作数据库
+     * @param registry
+     * @throws BeansException
+     */
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         try {

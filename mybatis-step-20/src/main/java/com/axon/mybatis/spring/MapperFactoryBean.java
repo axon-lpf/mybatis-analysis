@@ -16,6 +16,11 @@ public class MapperFactoryBean<T> implements FactoryBean<T> {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
+    /**
+     *  返回实际的dao对象
+     * @return
+     * @throws Exception
+     */
     @Override
     public T getObject() throws Exception {
         return sqlSessionFactory.openSession().getMapper(mapperInterface);
