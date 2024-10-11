@@ -5,6 +5,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  cache的生成策略
+ */
 public class CacheKey implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1146682552656046210L;
