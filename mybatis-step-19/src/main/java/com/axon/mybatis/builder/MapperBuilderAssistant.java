@@ -243,6 +243,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
             boolean useCache,
             Cache cache,
             MappedStatement.Builder statementBuilder) {
+
         flushCache = valueOrDefault(flushCache, !isSelect);
         useCache = valueOrDefault(useCache, isSelect);
         statementBuilder.flushCacheRequired(flushCache);
