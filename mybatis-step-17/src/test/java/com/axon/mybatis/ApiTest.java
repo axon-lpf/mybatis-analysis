@@ -65,6 +65,25 @@ import java.io.IOException;
      *     }
  *      }
  *
+ 1.5> 程序启动时，在XMLConfigBuilder中，解析扫描自定义拦截器，并加入缓存中
+
+        private void pluginElement(Element parent) throws Exception {
+                if (parent == null) return;
+                List<Element> elements = parent.elements();
+                for (Element element : elements) {
+                String interceptor = element.attributeValue("interceptor");
+                // 参数配置
+                Properties properties = new Properties();
+                List<Element> propertyElementList = element.elements("property");
+                for (Element property : propertyElementList) {
+                properties.setProperty(property.attributeValue("name"), property.attributeValue("value"));
+                }
+                // TODO 获取插件实现类并实例化：com.axon.mybatis.TestPlugin
+                Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
+                interceptorInstance.setProperties(properties);
+                configuration.addInterceptor(interceptorInstance);
+            }
+        }
  *
  *
  *

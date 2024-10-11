@@ -146,7 +146,7 @@ public class XMLConfigBuilder extends BaseBuilder {
             for (Element property : propertyElementList) {
                 properties.setProperty(property.attributeValue("name"), property.attributeValue("value"));
             }
-            // 获取插件实现类并实例化：cn.bugstack.mybatis.test.plugin.TestPlugin
+            // 获取插件实现类并实例化：com.axon.mybatis.TestPlugin
             Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
             interceptorInstance.setProperties(properties);
             configuration.addInterceptor(interceptorInstance);
