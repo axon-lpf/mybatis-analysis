@@ -15,7 +15,62 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * 本章主要是添加了sql的调用，以及事务的相关处理， 数据源，事务处理
+ * 本章节主要添加了Mybatis中的插件处理
+ *  核心代码：
+ *  1.1> 添加  Intercepts 、Signature 注解拦截处理
+ *  1.2> 创建拦截器InterceptorChain
+ *      public class InterceptorChain {
+ *
+ *
+         *     private final List<Interceptor> interceptors = new ArrayList<>();
+         *
+         *     public Object pluginAll(Object target) {
+         *         for (Interceptor interceptor : interceptors) {
+         *             target = interceptor.plugin(target);
+         *         }
+         *         return target;
+         *     }
+ *
+ *              public void addInterceptor(Interceptor interceptor) {
+ *                   interceptors.add(interceptor);
+ *          }
+ *     }
+ *
+ * 1.3>注册拦截器，在Configuration中，在创建Statement时，创建添加拦截器
+ *     public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+ *         StatementHandler preparedStatementHandler = new PreparedStatementHandler(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
+ *         // 嵌入插件，代理对象
+ *         preparedStatementHandler =(StatementHandler) interceptorChain.pluginAll(preparedStatementHandler);
+ *         // 这里创建出来的是一个代理对象
+ *         return preparedStatementHandler;
+ *     }
+ *
+ * 1.4> 创建自定义拦截器
+ *      @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class})})
+     * public class TestPlugin implements Interceptor {
+     *     @Override
+     *     public Object intercept(Invocation invocation) throws Throwable {
+     *
+     *         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
+     *         BoundSql boundSql = statementHandler.getBoundSql();
+     *         String sql = boundSql.getSql();
+     *         System.out.println("拦截sql" + sql);
+     *
+     *         return invocation.proceed();
+     *     }
+     *
+     *     @Override
+     *     public void setProperties(Properties properties) {
+     *         System.out.println("参数输出" + properties.getProperty("test00"));
+     *     }
+ *      }
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  */
 public class ApiTest {
 
