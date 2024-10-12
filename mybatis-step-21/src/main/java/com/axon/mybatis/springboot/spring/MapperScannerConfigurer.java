@@ -41,7 +41,6 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
                 beanDefinition.setSource(resource);
                 beanDefinition.setScope("singleton");
                 beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(beanDefinition.getBeanClassName());
-                beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(sqlSessionFactory);
                 beanDefinition.setBeanClass(MapperFactoryBean.class);
 
                 BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(beanDefinition, beanName);
