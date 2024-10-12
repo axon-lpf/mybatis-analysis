@@ -35,6 +35,8 @@
     <mappers>
         <!--基于xml的配置-->
         <mapper resource="mapper/Activity_Mapper.xml"/>
+        <mapper resource="mapper/User_Mapper.xml"/>
+
     </mappers>
 
 

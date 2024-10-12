@@ -27,4 +27,11 @@
             </if>
         </trim>
     </select>
+
+    <insert id="insert" parameterType="com.axon.mybatis.enties.ActivityDO">
+        INSERT INTO activity
+        (activity_id, activity_name, activity_desc, create_time, update_time)
+        VALUES (#{activityId}, #{activityName}, #{activityDesc}, now(), now())
+
+    </insert>
 </mapper>

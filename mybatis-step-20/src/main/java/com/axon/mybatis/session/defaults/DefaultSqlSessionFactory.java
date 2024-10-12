@@ -20,6 +20,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         this.configuration = configuration;
     }
 
+    /**
+     * 这里每次调用时， 都会newSqlSession, 其中里面的connection 都会床一个新的会话
+     *
+     * @return
+     */
     @Override
     public SqlSession openSession() {
         Transaction tx = null;
