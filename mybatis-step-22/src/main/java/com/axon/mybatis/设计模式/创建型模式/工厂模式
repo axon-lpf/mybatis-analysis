@@ -1,0 +1,62 @@
+/**
+ *   工厂模式的实现。
+ */
+public class DefaultSqlSessionFactory implements SqlSessionFactory {
+
+    private final Configuration configuration;
+
+    public DefaultSqlSessionFactory(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     * 这里每次调用时， 都会newSqlSession, 其中里面的connection 都会床一个新的会话
+     *
+     * @return
+     */
+    @Override
+    public SqlSession openSession() {
+        Transaction tx = null;
+        try {
+            Environment environment = configuration.getEnvironment();
+            TransactionFactory transactionFactory = environment.getTransactionFactory();
+            tx = transactionFactory.newTransaction(configuration.getEnvironment().getDataSource(), TransactionIsolationLevel.READ_COMMITTED, false);
+            Executor executor = configuration.newExecutor(tx);
+            return new DefaultSqlSession(configuration, executor);
+
+        } catch (Exception e) {
+            try {
+                assert tx != null;
+                tx.close();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+
+        throw new RuntimeException("Can't open session");
+    }
+}
+
+
+还有同类的设计SqlSessionFactory、ObjectFactory、 MapperProxyFactory、DataSourceFactory
+
+
+
+
+工厂模式（Factory Pattern）是一种创建型设计模式，提供了一种将对象的创建过程与其使用过程分离的方式。工厂模式主要用于简化对象创建，并使代码更具扩展性和灵活性。它有多个变种，包括简单工厂模式、工厂方法模式和抽象工厂模式。工厂模式的使用场景较为广泛，适用于任何需要创建对象的复杂场景。
+
+工厂模式的适用场景
+
+1.	对象的创建过程复杂，且经常变化：
+当对象的创建过程涉及多个步骤，或者依赖于其他类或资源时，工厂模式可以将对象的创建封装起来，使调用者无需关心对象是如何被创建的。
+案例：数据库连接池
+数据库连接的创建过程比较复杂，涉及到读取配置文件、创建连接等操作。使用工厂模式，数据库连接池可以管理连接的创建和分配，客户端只需调用工厂获取连接对象。
+
+
+
+2.创建的对象类型在运行时才能确定：
+当一个系统在运行时根据条件来确定创建哪种类型的对象时，工厂模式能够灵活地处理不同的对象创建逻辑，而不必在编译时决定具体的类。
+案例：日志系统
+在日志系统中，可以根据配置或运行时的环境选择使用哪种日志框架（如Log4j、Logback、Console等）。工厂模式可以根据配置选择适合的日志类来实例化对象。
+
+

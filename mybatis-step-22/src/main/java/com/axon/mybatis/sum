@@ -1,0 +1,63 @@
+以上的类型都是mybatis核心流程的核心类
+Configuration 几乎贯穿每个类，每个类都依赖它，但是它又去管理依赖它的类。
+
+Configuration 管理了各种处理类的缓存。
+
+    /**
+     * 类型别名注册机
+     */
+    protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
+    /**
+     * 映射注册机
+     */
+    protected MapperRegistry mapperRegistry = new MapperRegistry(this);
+
+    /**
+     * 隐射sql语句，存在mapper中
+     */
+    protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
+
+    /**
+     * xml解析注册机
+     */
+    protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+
+
+    /**
+     * 类型处理器注册机
+     */
+    protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+
+
+    /**
+     * 这里映射结果，存在map中
+     */
+    protected final Map<String, ResultMap> resultMaps = new HashMap<>();
+
+
+    /**
+     * 主键生成策略
+     */
+    protected final Map<String, KeyGenerator> keyGenerators = new HashMap<>();
+
+
+    /**
+     * 插件的拦截器链
+     */
+    protected final InterceptorChain interceptorChain = new InterceptorChain();
+
+
+    /**
+     * 缓存机制，默认不配置的情况是 SESSION
+     */
+    protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+
+
+    // 默认启用缓存，cacheEnabled = true/false
+    protected boolean cacheEnabled = true;
+
+    /**
+     * 缓存,存在Map里
+     */
+    protected final Map<String, Cache> caches = new HashMap<>();

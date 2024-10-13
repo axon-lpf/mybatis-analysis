@@ -1,0 +1,1 @@
+用于解析mapper中对应的每个方法， id、 resultType、resultMap、 paramType等。
