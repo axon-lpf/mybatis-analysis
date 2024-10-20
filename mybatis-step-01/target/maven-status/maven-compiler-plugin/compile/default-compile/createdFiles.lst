@@ -1,0 +1,8 @@
+com/axon/mybatis/Resources.class
+com/axon/mybatis/Configuration.class
+com/axon/mybatis/SqlSession.class
+com/axon/mybatis/SqlSessionFactory.class
+com/axon/mybatis/DefaultSqlSession.class
+com/axon/mybatis/DefaultSqlSessionFactory.class
+com/axon/mybatis/XNode.class
+com/axon/mybatis/SqlSessionFactoryBuilder.class

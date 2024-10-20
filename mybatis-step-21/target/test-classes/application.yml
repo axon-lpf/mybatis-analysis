@@ -1,0 +1,11 @@
+server:
+  port: 8990
+
+mybatis:
+  datasource:
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.2.104:3306/my_test_db?useUnicode=true&amp;characterEncoding=utf8
+    userName: root
+    password: 123456
+    mapper-locations: mapper/User_Mapper.xml
+    base-dao-package: com.axon.mybatis.dao

@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "name": "mybatis.datasource",
+      "type": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mybatis.datasource.base-dao-package",
+      "type": "java.lang.String",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    },
+    {
+      "name": "mybatis.datasource.driver",
+      "type": "java.lang.String",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    },
+    {
+      "name": "mybatis.datasource.mapper-locations",
+      "type": "java.lang.String",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    },
+    {
+      "name": "mybatis.datasource.password",
+      "type": "java.lang.String",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    },
+    {
+      "name": "mybatis.datasource.url",
+      "type": "java.lang.String",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    },
+    {
+      "name": "mybatis.datasource.user-name",
+      "type": "java.lang.String",
+      "sourceType": "com.axon.mybatis.springboot.autoconfigure.MybatisProperties"
+    }
+  ],
+  "hints": []
+}
